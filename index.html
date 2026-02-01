@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Audio Studio v8.7 - Ultra Fix</title>
+    <title>Audio Studio v8.8 - Final</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root { --p: #38bdf8; --bg: #0f172a; }
@@ -14,53 +14,43 @@
         label { font-size: 9px; color: #94a3b8; text-transform: uppercase; font-weight: 800; }
         input { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 10px; color: #fff; outline: none; font-size: 13px; }
         .btn { background: linear-gradient(135deg, #38bdf8, #818cf8); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 10px; }
-        .main { flex-grow: 1; display: flex; align-items: center; justify-content: center; background: #020617; background-image: radial-gradient(#1e293b 1px, transparent 1px); background-size: 20px 20px; }
+        .main { flex-grow: 1; display: flex; align-items: center; justify-content: center; background: #020617; }
         #preview-container { border-radius: 30px; overflow: hidden; box-shadow: 0 0 50px rgba(0,0,0,0.5); }
     </style>
 </head>
 <body>
 <div class="app">
     <aside class="side">
-        <h2>Audio Studio v8.7</h2>
+        <h2>Audio Studio v8.8</h2>
         <div class="f"><label>Цвет:</label><input type="color" id="c" value="#38bdf8"></div>
-        <div class="f"><label>GitHub URL (Папка):</label><input type="text" id="u" value="https://github.com/irinschensmagen-alt/audioplayer/tree/main/audio"></div>
         <div class="f"><label>Фон (URL):</label><input type="text" id="b" value="https://images.unsplash.com/photo-1483354483454-4cd359948304?w=800"></div>
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
             <div class="f"><label>Ширина:</label><input type="number" id="w" value="350"></div>
             <div class="f"><label>Высота:</label><input type="number" id="h" value="500"></div>
         </div>
-        <div class="f"><label>Громкость:</label><input type="range" id="v" min="0" max="1" step="0.1" value="0.7" style="accent-color:var(--p)"></div>
         <button class="btn" onclick="copy()">Скопировать для Genially</button>
     </aside>
     <main class="main"><div id="preview-container"></div></main>
 </div>
 <script>
     function draw() {
-        const col = document.getElementById('c').value, url = document.getElementById('u').value.trim(), bg = document.getElementById('b').value.trim(), 
-              w = document.getElementById('w').value, h = document.getElementById('h').value, vol = document.getElementById('v').value;
-        document.documentElement.style.setProperty('--p', col);
-        let api, raw;
-        try {
-            const p = url.replace('https://github.com/', '').split('/').filter(x => x && x !== 'tree' && x !== 'blob');
-            const user = p[0], repo = p[1], branch = p[2] || 'main', folder = p.slice(3).join('/');
-            api = `https://api.github.com/repos/${user}/${repo}/contents/${folder}?ref=${branch}`;
-            raw = `https://raw.githubusercontent.com/${user}/${repo}/${branch}/${folder}`;
-        } catch(e) { console.error("URL error"); }
-
+        const col = document.getElementById('c').value, bg = document.getElementById('b').value.trim(), 
+              w = document.getElementById('w').value, h = document.getElementById('h').value;
+        
         const playerHTML = `
 <div style="width:100%; height:100%; position:relative; background:url('${bg}') center/cover no-repeat; font-family:sans-serif; color:white; overflow:hidden;">
-    <div style="absolute; inset:0; background:rgba(0,0,0,0.5); backdrop-filter:blur(15px); -webkit-backdrop-filter:blur(15px); position:absolute;"></div>
+    <div style="position:absolute; inset:0; background:rgba(0,0,0,0.5); backdrop-filter:blur(15px); -webkit-backdrop-filter:blur(15px);"></div>
     <div style="position:relative; z-index:2; height:100%; display:flex; flex-direction:column; padding:25px; box-sizing:border-box;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
             <button onclick="tL()" style="background:none; border:none; color:white; font-size:24px; cursor:pointer;">☰</button>
             <a id="dl" href="#" download style="text-decoration:none; color:white; font-size:20px;">⬇</a>
         </div>
         <div style="text-align:center; flex-grow:1; display:flex; flex-direction:column; justify-content:center;">
-            <img src="${raw}/cover.jpg" style="width:150px; height:150px; border-radius:20px; margin:0 auto 20px; object-fit:cover; border:2px solid white;">
+            <img src="https://raw.githubusercontent.com/irinschensmagen-alt/audioplayer/main/audio/cover.jpg" style="width:150px; height:150px; border-radius:20px; margin:0 auto 20px; object-fit:cover; border:2px solid white;">
             <div id="t" style="font-weight:700; font-size:18px; margin-bottom:10px;">Загрузка...</div>
             <div style="display:flex; justify-content:center; gap:30px; align-items:center; margin-bottom:20px;">
                 <button onclick="pPr()" style="background:none; border:none; color:white; font-size:28px; cursor:pointer;">⏮</button>
-                <button onclick="pPl()" id="pb" style="width:60px; height:60px; background:white; color:black; border-radius:50%; border:none; font-size:24px; cursor:pointer;">▶</button>
+                <button onclick="pPl()" id="pb" style="width:60px; height:60px; background:white; color:black; border-radius:50%; border:none; font-size:24px; cursor:pointer; display:flex; align-items:center; justify-content:center;">▶</button>
                 <button onclick="pNe()" style="background:none; border:none; color:white; font-size:28px; cursor:pointer;">⏭</button>
             </div>
             <input type="range" id="pr" value="0" style="width:100%; accent-color:${col}; margin-bottom:8px;">
@@ -68,7 +58,7 @@
                 <span id="cur">0:00</span><span id="dur">0:00</span>
             </div>
             <div style="display:flex; align-items:center; gap:10px;">
-                <span>🔈</span><input type="range" id="vl" min="0" max="1" step="0.1" value="${vol}" style="flex-grow:1; accent-color:${col};">
+                <span>🔈</span><input type="range" id="vl" min="0" max="1" step="0.1" value="0.7" style="flex-grow:1; accent-color:${col};">
             </div>
         </div>
     </div>
@@ -82,21 +72,28 @@
 (function(){
     const a=document.getElementById('au'), t=document.getElementById('t'), b=document.getElementById('pb'), p=document.getElementById('pr'), v=document.getElementById('vl'), 
           s=document.getElementById('ls'), i=document.getElementById('it'), cTime=document.getElementById('cur'), dTime=document.getElementById('dur'), dl=document.getElementById('dl');
-    let trk=[], cur=0;
+    
+    // ПРЯМЫЕ ССЫЛКИ НА ВАШИ ФАЙЛЫ
+    const trk = [
+        {n: "Neues Jahr Wunder", u: "https://raw.githubusercontent.com/irinschensmagen-alt/audioplayer/main/audio/Neues%20Jahr%20Wunder.mp3"},
+        {n: "Neujahrsstimmung (1)", u: "https://raw.githubusercontent.com/irinschensmagen-alt/audioplayer/main/audio/Neujahrsstimmung%20(1).mp3"}
+    ];
+    let cur=0;
     const fmt=(s)=>Math.floor(s/60)+':'+('0'+Math.floor(s%60)).slice(-2);
-    fetch('${api}').then(r=>r.json()).then(d=>{
-        if(!Array.isArray(d)) throw new Error();
-        trk=d.filter(f=>f.name.toLowerCase().endsWith('.mp3')).map(f=>({n:f.name.replace('.mp3',''), u:f.download_url}));
-        if(trk.length){ 
-            trk.forEach((x,j)=>{ 
-                let d=document.createElement('div'); d.innerText=(j+1)+'. '+x.n; 
-                d.style.padding='12px 0'; d.style.borderBottom='1px solid #333'; d.style.cursor='pointer';
-                d.onclick=()=>{load(j);tL();}; i.appendChild(d); 
-            }); 
-            load(0, false); 
-        } else t.innerText='MP3 не найдены';
-    }).catch(()=>t.innerText='Ошибка папки');
-    function load(j,m=true){ cur=j; a.src=trk[j].u; t.innerText=trk[j].n; dl.href=trk[j].u; if(m) a.play().then(()=>b.innerText='⏸'); }
+
+    trk.forEach((x,j)=>{ 
+        let d=document.createElement('div'); d.innerText=(j+1)+'. '+x.n; 
+        d.style.padding='12px 0'; d.style.borderBottom='1px solid #333'; d.style.cursor='pointer';
+        d.onclick=()=>{load(j);tL();}; i.appendChild(d); 
+    }); 
+
+    function load(j,m=true){ 
+        cur=j; a.src=trk[j].u; t.innerText=trk[j].n; dl.href=trk[j].u; 
+        if(m) a.play().then(()=>b.innerText='⏸').catch(e=>console.log("Play blocked")); 
+    }
+    
+    load(0, false);
+
     window.pPl=()=>{ if(a.paused){ a.play(); b.innerText='⏸'; } else { a.pause(); b.innerText='▶'; } };
     window.pNe=()=>{ cur=(cur+1)%trk.length; load(cur); };
     window.pPr=()=>{ cur=(cur-1+trk.length)%trk.length; load(cur); };
@@ -105,7 +102,6 @@
     p.oninput=()=>a.currentTime=(p.value/100)*a.duration;
     v.oninput=()=>a.volume=v.value;
     a.onended=()=>pNe();
-    a.volume=${vol};
 })();
 <\/script>`;
         const final = `<iframe srcdoc='${playerHTML.replace(/'/g, "&apos;").replace(/<\/script>/g, '<\\/script>')}' width="${w}" height="${h}" style="border:none;"></iframe>`;
@@ -114,7 +110,7 @@
     }
     document.querySelectorAll('input').forEach(i => i.oninput = draw);
     window.onload = draw;
-    function copy() { navigator.clipboard.writeText(window.res); alert("Код для Genially готов!"); }
+    function copy() { navigator.clipboard.writeText(window.res); alert("Код скопирован!"); }
 </script>
 </body>
 </html>
