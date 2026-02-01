@@ -1,41 +1,246 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Audio Player Studio</title>
+<style>
+:root {
+  --accent: #6cf;
+  --bg1: #ff0080;
+  --bg2: #7928ca;
+  --bg3: #2af598;
+  --font: 'Inter', system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  color: #fff;
+  min-height: 100vh;
+  background: linear-gradient(270deg, var(--bg1), var(--bg2), var(--bg3));
+  background-size: 600% 600%;
+  animation: chameleon 18s ease infinite;
+}
+
+@keyframes chameleon {
+  0% {background-position: 0% 50%;}
+  50% {background-position: 100% 50%;}
+  100% {background-position: 0% 50%;}
+}
+
+.wrapper {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 20px;
+  padding: 20px;
+}
+
+.panel {
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  padding: 16px;
+}
+
+h2 { margin-top: 0; font-size: 18px; }
+label { font-size: 13px; opacity: .85; }
+input, select, button {
+  width: 100%;
+  margin: 6px 0 14px;
+}
+
+button {
+  background: var(--accent);
+  color: #000;
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.player-frame {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.player {
+  background: #111;
+  border-radius: 18px;
+  padding: 16px;
+  width: var(--w, 420px);
+  height: var(--h, 180px);
+  box-shadow: 0 10px 40px rgba(0,0,0,.5);
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: 10px;
+}
+
+.cover {
+  width: 100%;
+  height: 80px;
+  background: #222 center/cover no-repeat;
+  border-radius: 12px;
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.controls button { width: auto; padding: 6px 10px; }
+
+.timeline {
+  width: 100%;
+}
+
+.playlist {
+  display: none;
+  background: #000;
+  border-radius: 10px;
+  padding: 6px;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.playlist div {
+  padding: 6px;
+  cursor: pointer;
+}
+
+.playlist div:hover { background: #222; }
+
+iframe-output {
+  white-space: pre-wrap;
+}
+
+textarea { width: 100%; height: 120px; }
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <!-- CONTROL PANEL -->
+  <div class="panel">
+    <h2>🎛 Панель управления</h2>
+
+    <label>Ширина плеера (px)</label>
+    <input type="number" id="width" value="420">
+
+    <label>Высота плеера (px)</label>
+    <input type="number" id="height" value="180">
+
+    <label>Цвет акцента</label>
+    <input type="color" id="color" value="#66ccff">
+
+    <label>Шрифт</label>
+    <select id="font">
+      <option value="Inter">Inter</option>
+      <option value="Arial">Arial</option>
+      <option value="Georgia">Georgia</option>
+      <option value="Courier New">Courier</option>
+    </select>
+
+    <label>Заставка плейлиста</label>
+    <input type="file" id="coverUpload" accept="image/*">
+
+    <label>Загрузить аудио</label>
+    <input type="file" id="audioUpload" accept="audio/*" multiple>
+
+    <button onclick="generateIframe()">📦 Получить iframe</button>
+
+    <label>iframe для Genially</label>
+    <textarea id="iframe"></textarea>
+  </div>
+
+  <!-- PLAYER PREVIEW -->
+  <div class="player-frame">
+    <div class="player" id="player">
+      <div class="cover" id="cover"></div>
+
+      <div class="controls">
+        <button onclick="togglePlay()">▶ / ⏸</button>
+        <button onclick="togglePlaylist()">📂 Плейлист</button>
+        <button id="downloadBtn">⬇ Скачать</button>
+        <input type="range" min="0" max="1" step="0.01" onchange="audio.volume=this.value">
+      </div>
+
+      <input class="timeline" type="range" min="0" value="0" step="0.01" onchange="audio.currentTime=this.value">
+
+      <div class="playlist" id="playlist"></div>
+
+      <audio id="audio"></audio>
+    </div>
+  </div>
+
+</div>
+
 <script>
-    const a = document.getElementById('audio'), t = document.getElementById('t'), b = document.getElementById('pbtn'), 
-          dl = document.getElementById('dl'), curT = document.getElementById('cur'), durT = document.getElementById('dur'), pr = document.getElementById('prog');
-    
-    // ПРЯМЫЕ ССЫЛКИ С ПРОВЕРКОЙ ДОСТУПА
-    const songs = [
-        {n:"Neues Jahr Wunder", u:"https://irinschensmagen-alt.github.io/audioplayer/audio/Neues%20Jahr%20Wunder.mp3"},
-        {n:"Neujahrsstimmung (1)", u:"https://irinschensmagen-alt.github.io/audioplayer/audio/Neujahrsstimmung%20(1).mp3"}
-    ];
-    
-    let idx = 0;
-    function load(i) {
-        idx = i; 
-        a.src = songs[idx].u; 
-        t.innerText = songs[idx].n; 
-        dl.href = songs[idx].u;
-    }
+const audio = document.getElementById('audio');
+const timeline = document.querySelector('.timeline');
+const playlistEl = document.getElementById('playlist');
+const downloadBtn = document.getElementById('downloadBtn');
+let tracks = [];
+let current = 0;
 
-    window.pp = () => { 
-        if(a.paused) { 
-            a.play().then(() => { b.innerText='⏸'; }).catch(() => { alert("Ошибка: файл недоступен на GitHub. Проверьте папку audio!"); });
-        } else { 
-            a.pause(); b.innerText='▶'; 
-        } 
-    };
+function togglePlay() {
+  audio.paused ? audio.play() : audio.pause();
+}
 
-    window.next = () => { idx=(idx+1)%songs.length; load(idx); a.play(); b.innerText='⏸'; };
-    window.prev = () => { idx=(idx-1+songs.length)%songs.length; load(idx); a.play(); b.innerText='⏸'; };
-    
-    a.ontimeupdate = () => {
-        pr.value = (a.currentTime / a.duration) * 100 || 0;
-        const f = (s) => Math.floor(s/60) + ":" + ("0"+Math.floor(s%60)).slice(-2);
-        curT.innerText = f(a.currentTime); 
-        durT.innerText = f(a.duration || 0);
-    };
+function togglePlaylist() {
+  playlistEl.style.display = playlistEl.style.display === 'block' ? 'none' : 'block';
+}
 
-    pr.oninput = () => a.currentTime = (pr.value / 100) * a.duration;
-    
-    // Инициализация
-    window.onload = () => load(0);
+audio.addEventListener('timeupdate', () => {
+  timeline.max = audio.duration || 0;
+  timeline.value = audio.currentTime;
+});
+
+function loadTrack(i) {
+  current = i;
+  audio.src = tracks[i].url;
+  audio.play();
+  downloadBtn.onclick = () => {
+    const a = document.createElement('a');
+    a.href = tracks[i].url;
+    a.download = tracks[i].name;
+    a.click();
+  };
+}
+
+document.getElementById('audioUpload').onchange = e => {
+  [...e.target.files].forEach(file => {
+    const url = URL.createObjectURL(file);
+    tracks.push({ name: file.name, url });
+    const div = document.createElement('div');
+    div.textContent = file.name;
+    div.onclick = () => loadTrack(tracks.length - 1);
+    playlistEl.appendChild(div);
+  });
+  if (tracks.length && !audio.src) loadTrack(0);
+};
+
+// STYLE CONTROLS
+const player = document.getElementById('player');
+
+width.oninput = () => player.style.setProperty('--w', width.value + 'px');
+height.oninput = () => player.style.setProperty('--h', height.value + 'px');
+color.oninput = () => document.documentElement.style.setProperty('--accent', color.value);
+font.onchange = () => document.documentElement.style.setProperty('--font', font.value);
+
+coverUpload.onchange = e => {
+  const url = URL.createObjectURL(e.target.files[0]);
+  cover.style.backgroundImage = `url(${url})`;
+};
+
+function generateIframe() {
+  const iframe = `<iframe src=\"${location.href}\" width=\"${width.value}\" height=\"${height.value}\" frameborder=\"0\"></iframe>`;
+  document.getElementById('iframe').value = iframe;
+}
 </script>
+</body>
+</html>
