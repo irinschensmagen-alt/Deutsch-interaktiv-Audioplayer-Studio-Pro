@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Audio Studio Gold Pro</title>
+    <title>Audio Studio Gold Custom</title>
     <style>
         :root { 
             --gold: linear-gradient(135deg, #d4af37, #f1c40f, #c5a028);
@@ -17,6 +17,7 @@
         
         .settings { background: var(--panel-bg); padding: 20px; border-right: 1px solid #ddd; display: flex; flex-direction: column; overflow-y: auto; box-shadow: 5px 0 15px rgba(0,0,0,0.05); }
         .header { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #f1c40f; padding-bottom: 10px; }
+        .logo-img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid #d4af37; background: #fff; }
         
         .player-view { padding: 40px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
         .cover { width: 100%; max-width: 450px; height: 250px; border-radius: 20px; background: #fff center/cover no-repeat; border: 5px solid #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; }
@@ -24,59 +25,62 @@
         label { display: block; font-size: 0.7rem; font-weight: bold; margin-top: 15px; color: var(--gold-text); text-transform: uppercase; }
         select, input, textarea { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #ccc; margin-top: 5px; font-size: 0.85rem; box-sizing: border-box; }
         
-        .btn { width: 100%; padding: 12px; border: none; border-radius: 12px; background: var(--gold); color: white; font-weight: bold; cursor: pointer; margin-top: 15px; transition: 0.3s; }
-        
-        /* Статус ссылки */
-        #link-status { font-size: 0.7rem; margin-top: 5px; font-weight: bold; display: none; }
-        .status-ok { color: #27ae60; }
-        .status-warn { color: #e67e22; }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 12px; background: var(--gold); color: white; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
 
         .controls { display: flex; gap: 20px; align-items: center; margin: 25px 0; }
         .c-btn { width: 45px; height: 45px; border-radius: 12px; border: none; background: #fff; color: #d4af37; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         #play { width: 65px; height: 65px; border-radius: 50%; background: var(--gold); color: white; font-size: 1.5rem; }
         
         #prog { width: 100%; max-width: 500px; accent-color: #d4af37; }
+        #timer-display { font-family: monospace; font-weight: bold; color: #e74c3c; font-size: 1.2rem; margin-bottom: 10px; display: none; }
         #time { font-family: monospace; font-weight: bold; color: var(--gold-text); margin-top: 5px; }
 
-        .info-box { background: #fff9e6; border: 1px solid #f1c40f; padding: 10px; border-radius: 10px; font-size: 0.75rem; margin-top: 20px; }
+        #lock-screen { position: absolute; inset: 0; background: rgba(255,255,255,0.98); z-index: 1000; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
     </style>
 </head>
 <body>
 
+<div id="lock-screen">
+    <h1 style="color:#d4af37">Time is up</h1>
+    <p>Доступ заблокирован.</p>
+    <button class="btn" style="width:150px" onclick="location.reload()">Restart</button>
+</div>
+
 <div class="container">
     <div class="settings">
         <div class="header">
-            <h3 id="t-title">Audio Editor Gold</h3>
+            <img id="main-logo" src="" class="logo-img" alt="Logo" onerror="this.src='https://via.placeholder.com/45/d4af37/ffffff?text=LOGO'">
+            <h3 id="t-title" style="margin:0; font-size:1rem;">Audio Studio</h3>
         </div>
 
-        <label id="l-lang">Язык / Sprache</label>
+        <label>🖼️ Ссылка на ваш Логотип</label>
+        <input type="text" id="logoUrl" placeholder="https://.../my-logo.png">
+
+        <label id="l-lang">Язык</label>
         <select id="lang">
-            <option value="ru">Русский</option>
-            <option value="de">Deutsch</option>
-            <option value="en">English</option>
+            <option value="ru">Русский</option><option value="de">Deutsch</option><option value="en">English</option>
         </select>
 
-        <label id="l-mode">Режим / Modus</label>
+        <label id="l-mode">Режим</label>
         <select id="mode">
             <option value="master">Master (Loop)</option>
-            <option value="study" selected>Study (Limit)</option>
-            <option value="test">Test (Exam)</option>
+            <option value="study" selected>Study (2 Attempts + Slow)</option>
+            <option value="test">Test (Exam 2 min)</option>
         </select>
 
-        <div class="info-box">
-            <b>💡 Советы по ссылкам:</b><br>
-            • GitHub: Самый надежный.<br>
-            • Dropbox: Авто-исправляем dl=0 на raw=1.<br>
-            • Google Drive: Требует Direct Link.
-        </div>
+        <button class="btn" id="slowBtn" style="background:#00b894; display:none">🐢 Slow Motion 0.8x</button>
+        <button class="btn" id="loopBtn" style="background:#0984e3; display:none">🔄 Loop: Off</button>
 
         <label id="l-code" style="margin-top:20px">Код Iframe</label>
-        <textarea id="code" readonly placeholder="Скопируйте код после настроек"></textarea>
+        <textarea id="code" readonly></textarea>
         <button class="btn" id="copy-btn">Скопировать код</button>
     </div>
 
     <div class="player-view">
-        <div id="cover"></div>
+        <div id="timer-display">02:00</div>
+        <div id="attempt-info" style="color:#d4af37; font-weight:bold; margin-bottom:10px;"></div>
+        <div class="cover" id="cover"></div>
         
         <input type="range" id="prog" value="0" step="0.1">
         <div id="time">00:00 / 00:00</div>
@@ -88,11 +92,9 @@
         </div>
 
         <div style="width:100%; max-width:500px;">
-            <label id="l-aud">🔗 Ссылка на Аудио</label>
+            <label>🔗 Ссылка на Аудио</label>
             <input type="text" id="audUrl" placeholder="https://...">
-            <div id="link-status"></div>
-
-            <label id="l-img">🖼️ Ссылка на Обложку</label>
+            <label>🖼️ Ссылка на Обложку</label>
             <input type="text" id="imgUrl" placeholder="https://...">
         </div>
     </div>
@@ -100,46 +102,103 @@
 
 <script>
     const audio = new Audio();
-    audio.crossOrigin = "anonymous";
     let plays = 0;
+    let timerInterval;
+    let timeLeft = 120; // 2 минуты для Test Mode
 
-    // Умная обработка ссылки
-    document.getElementById('audUrl').addEventListener('input', function(e) {
-        let url = e.target.value.trim();
-        const status = document.getElementById('link-status');
-        
-        if (!url) { status.style.display = 'none'; return; }
-        
-        // Авто-фикс Dropbox
-        if (url.includes('dropbox.com') && url.includes('dl=0')) {
-            url = url.replace('dl=0', 'raw=1');
-            this.value = url;
-        }
-
-        // Проверка расширения
-        const isDirect = /\.(mp3|wav|ogg|m4a|aac)/i.test(url);
-        status.style.display = 'block';
-        if (isDirect) {
-            status.innerText = "✓ Прямая ссылка обнаружена";
-            status.className = "status-ok";
-        } else {
-            status.innerText = "⚠ Ссылка может не работать (не mp3 формат)";
-            status.className = "status-warn";
-        }
-
-        audio.src = url;
-        audio.load();
-        plays = 0;
+    // Обновление Логотипа
+    document.getElementById('logoUrl').addEventListener('input', (e) => {
+        const url = e.target.value.trim();
+        if(url) document.getElementById('main-logo').src = url;
     });
 
-    document.getElementById('imgUrl').oninput = (e) => {
-        if (e.target.value) document.getElementById('cover').style.backgroundImage = `url(${e.target.value})`;
+    // Умная обработка аудио
+    document.getElementById('audUrl').addEventListener('input', (e) => {
+        let url = e.target.value.trim();
+        if (url.includes('dropbox.com')) url = url.replace('dl=0', 'raw=1');
+        audio.src = url;
+        plays = 0;
+        updateAttempts();
+    });
+
+    document.getElementById('mode').onchange = function() {
+        const m = this.value;
+        plays = 0;
+        audio.loop = false;
+        audio.playbackRate = 1;
+        clearInterval(timerInterval);
+        document.getElementById('timer-display').style.display = (m === 'test') ? 'block' : 'none';
+        document.getElementById('slowBtn').style.display = (m === 'study') ? 'block' : 'none';
+        document.getElementById('loopBtn').style.display = (m === 'master') ? 'block' : 'none';
+        
+        // В Test Mode блокируем перемотку
+        const isTest = (m === 'test');
+        document.getElementById('prog').style.pointerEvents = isTest ? 'none' : 'auto';
+        document.getElementById('rew').disabled = isTest;
+        document.getElementById('fwd').disabled = isTest;
+        updateAttempts();
     };
 
+    function startTestTimer() {
+        timeLeft = 120;
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            let mins = Math.floor(timeLeft / 60);
+            let secs = timeLeft % 60;
+            document.getElementById('timer-display').innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                audio.pause(); // Пауза при окончании времени
+                document.getElementById('lock-screen').style.display = 'flex'; // Блокировка экрана
+            }
+        }, 1000);
+    }
+
+    function updateAttempts() {
+        const m = document.getElementById('mode').value;
+        if(m === 'study' || m === 'test') {
+            document.getElementById('attempt-info').innerText = `Попытка: ${plays + 1} / 2`;
+        } else {
+            document.getElementById('attempt-info').innerText = "";
+        }
+    }
+
     document.getElementById('play').onclick = () => {
-        if (!audio.src) return alert("Вставьте аудио ссылку!");
-        audio.paused ? audio.play() : audio.pause();
+        if (!audio.src) return alert("Вставьте ссылку на аудио!");
+        if (audio.paused) {
+            audio.play();
+            if(document.getElementById('mode').value === 'test' && !timerInterval) startTestTimer();
+        } else {
+            audio.pause();
+        }
         document.getElementById('play').innerText = audio.paused ? '▶' : '⏸';
+    };
+
+    audio.onplay = () => {
+        const m = document.getElementById('mode').value;
+        if ((m === 'study' || m === 'test') && audio.currentTime === 0) {
+            plays++;
+            updateAttempts();
+            if (plays > 2) {
+                audio.pause();
+                document.getElementById('lock-screen').style.display = 'flex';
+            }
+            // Блокировка перемотки в Study Mode на 3-й попытке
+            if (m === 'study' && plays >= 3) {
+                document.getElementById('prog').style.pointerEvents = 'none';
+                document.getElementById('rew').disabled = true;
+                document.getElementById('fwd').disabled = true;
+            }
+        }
+    };
+
+    document.getElementById('slowBtn').onclick = () => {
+        audio.playbackRate = (audio.playbackRate === 1) ? 0.8 : 1; // Замедление 0.8x
+    };
+
+    document.getElementById('loopBtn').onclick = () => {
+        audio.loop = !audio.loop; // Loop в Master Mode
+        document.getElementById('loopBtn').innerText = audio.loop ? "🔄 Loop: ON" : "🔄 Loop: OFF";
     };
 
     audio.ontimeupdate = () => {
@@ -150,15 +209,11 @@
         document.getElementById('time').innerText = `${fmt(audio.currentTime)} / ${fmt(audio.duration || 0)}`;
     };
 
-    document.getElementById('prog').oninput = (e) => audio.currentTime = e.target.value;
-    document.getElementById('rew').onclick = () => audio.currentTime -= 10;
-    document.getElementById('fwd').onclick = () => audio.currentTime += 10;
-
     document.getElementById('copy-btn').onclick = () => {
-        const frame = `<iframe src="${window.location.href}" width="100%" height="600" frameborder="0"></iframe>`;
+        const frame = `<iframe src="${window.location.href}" width="100%" height="650" frameborder="0"></iframe>`;
         document.getElementById('code').value = frame;
         navigator.clipboard.writeText(frame);
-        alert("Готово! Код скопирован.");
+        alert("Код скопирован!");
     };
 </script>
 </body>
