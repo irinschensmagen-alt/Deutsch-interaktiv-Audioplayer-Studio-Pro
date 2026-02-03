@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AUDIO STUDIO PRO</title>
     <style>
         :root { 
@@ -12,12 +11,12 @@
 
         body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--bg); display: flex; height: 100vh; overflow: hidden; width: 100vw; }
 
-        /* САЙДБАР */
+        /* SIDEBAR */
         .sidebar { width: 320px; background: white; padding: 25px; border-right: 2px solid #f1c40f; flex-shrink: 0; overflow-y: auto; z-index: 100; box-shadow: 5px 0 15px rgba(0,0,0,0.05); }
         .logo-box { text-align: center; margin-bottom: 25px; cursor: pointer; }
         .logo-img { width: 100px; height: 100px; border-radius: 50%; border: 4px solid #d4af37; box-shadow: 0 5px 15px rgba(212,175,55,0.3); }
 
-        /* ПЛЕЕР (ЦЕНТР) */
+        /* PLAYER ZONE */
         .player-zone { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; min-width: 450px; position: relative; }
         .cover { 
             width: 90%; max-width: 550px; aspect-ratio: 16/9; border-radius: 30px; 
@@ -26,19 +25,19 @@
             background-size: cover; background-position: center; transition: 0.3s;
         }
 
-        /* УПРАВЛЕНИЕ */
+        /* CONTROLS */
         #prog { width: 90%; max-width: 550px; accent-color: var(--accent); height: 10px; cursor: pointer; }
         .time { font-weight: 900; font-size: 2rem; margin: 15px 0; color: #333; font-variant-numeric: tabular-nums; }
         .controls { display: flex; gap: 35px; align-items: center; margin-bottom: 30px; }
         .play-btn { width: 100px; height: 100px; border-radius: 50%; background: var(--gold); color: white; border: none; font-size: 3rem; cursor: pointer; box-shadow: 0 10px 20px rgba(212,175,55,0.4); }
         .nav-btn { background: none; border: none; font-size: 2.8rem; cursor: pointer; color: #444; }
 
-        /* МАГНИТНАЯ ШТОРКА (СЛОВАРЬ) */
+        /* DICTIONARY SLIDER (MAGNETIC) */
         .dict-panel { width: 450px; min-width: 0; background: white; border-left: 10px solid #d4af37; display: flex; position: relative; flex-shrink: 0; transition: width 0.05s ease; }
         .resizer { width: 35px; cursor: col-resize; position: absolute; left: -25px; top: 0; bottom: 0; z-index: 200; background: transparent; }
         iframe { width: 100%; height: 100%; border: none; }
 
-        /* ИНТЕРФЕЙС ЭЛЕМЕНТЫ */
+        /* INTERFACE ELEMENTS */
         .card { background: #fff; padding: 15px; border-radius: 20px; border: 1px solid #eee; margin-bottom: 12px; position: relative; }
         .input-row { display: flex; align-items: center; gap: 5px; margin-top: 5px; }
         input, select { width: 100%; padding: 10px; border-radius: 10px; border: 1.5px solid #ddd; outline: none; font-size: 0.85rem; }
@@ -48,8 +47,7 @@
         .slow-mode { background: #2ecc71; color: white; border: none; padding: 14px; border-radius: 14px; font-weight: 800; cursor: pointer; width: 100%; margin: 15px 0; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .slow-mode.active { background: #e67e22; }
 
-        /* ТЕСТ МОД ЭКРАН */
-        #test-lock { display: none; position: absolute; top:0; left:0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; color: white; flex-direction: column; align-items: center; justify-content: center; border-radius: 30px; }
+        #test-lock { display: none; position: absolute; top:0; left:0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; color: white; flex-direction: column; align-items: center; justify-content: center; border-radius: 30px; }
     </style>
 </head>
 <body>
@@ -62,26 +60,34 @@
         <h2 style="color:var(--accent); font-weight:900; font-size:1.2rem; margin-top:10px;">AUDIO STUDIO PRO</h2>
     </div>
 
-    <label id="l-lang">LANGUAGE / ЯЗЫК</label>
+    <label id="l-lang">LANGUAGE / SPRACHE</label>
     <select id="langSelect" onchange="translate()">
-        <option value="ru">Русский</option><option value="en">English</option>
-        <option value="it">Italiano</option><option value="fr">Français</option><option value="es">Español</option>
-        <option value="ja">日本語</option><option value="zh">中文</option><option value="fa">فارسی</option>
-        <option value="hi">हिन्दी</option><option value="da">دری</option><option value="ar">العربية</option>
+        <option value="de">Deutsch</option>
+        <option value="ru">Русский</option>
+        <option value="en">English</option>
+        <option value="it">Italiano</option>
+        <option value="fr">Français</option>
+        <option value="es">Español</option>
+        <option value="ja">日本語</option>
+        <option value="zh">中文</option>
+        <option value="fa">فارسی</option>
+        <option value="hi">हिन्दी</option>
+        <option value="da">دری</option>
+        <option value="ar">العربية</option>
         <option value="pt">Português</option>
     </select>
 
-    <label id="l-mode" style="margin-top:15px; display:block;">MODE / РЕЖИМ</label>
+    <label id="l-mode" style="margin-top:15px; display:block;">MODE / MODUS</label>
     <select id="modeSelect" onchange="setMode()">
         <option value="study" id="opt-study">Study (Ученик)</option>
         <option value="master" id="opt-master">Master (Loop)</option>
         <option value="test" id="opt-test">Test (Exam)</option>
     </select>
 
-    <button id="slowBtn" class="slow-mode" onclick="tempo()">🐢 <span id="l-slow">SLOW 0.8x</span></button>
+    <button id="slowBtn" class="slow-mode" onclick="tempo()">🐢 <span id="l-slow">LANGSAM 0.8x</span></button>
 
     <div class="card">
-        <label id="l-pdf">LOAD PDF</label>
+        <label id="l-pdf">PDF LADEN</label>
         <div class="input-row"><input type="file" id="f-pdf" accept=".pdf"><button class="x" onclick="cls('f-pdf','pdf')">✖</button></div>
     </div>
     <div class="card">
@@ -91,8 +97,8 @@
 </div>
 
 <div class="player-zone" id="player-zone">
-    <div id="test-lock"><h1 id="l-timeup">TIME IS UP</h1><button onclick="location.reload()" style="padding:10px 20px; cursor:pointer;">RESTART</button></div>
-    <div id="status" style="color:var(--accent); font-weight:bold; letter-spacing:3px; margin-bottom:15px;">READY</div>
+    <div id="test-lock"><h1 id="l-timeup">ZEIT IST UM</h1><button onclick="location.reload()" style="padding:10px 20px; cursor:pointer; border-radius:10px; border:none; background:var(--gold); color:white; font-weight:bold;">RESTART</button></div>
+    <div id="status" style="color:var(--accent); font-weight:bold; letter-spacing:3px; margin-bottom:15px;">BEREIT</div>
     <div class="cover" id="cover">🎵</div>
     
     <input type="range" id="prog" value="0" step="0.1">
@@ -105,8 +111,8 @@
     </div>
 
     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; width:100%; max-width:750px;">
-        <div class="card"><label id="l-al">AUDIO URL</label><div class="input-row"><input type="text" id="u-aud" oninput="audio.src=this.value"><button class="x" onclick="cls('u-aud','aud')">✖</button></div></div>
-        <div class="card"><label id="l-il">IMAGE URL</label><div class="input-row"><input type="text" id="u-img" oninput="setI(this.value)"><button class="x" onclick="cls('u-img','img')">✖</button></div></div>
+        <div class="card"><label id="l-al">AUDIO LINK</label><div class="input-row"><input type="text" id="u-aud" oninput="audio.src=this.value"><button class="x" onclick="cls('u-aud','aud')">✖</button></div></div>
+        <div class="card"><label id="l-il">IMAGE LINK</label><div class="input-row"><input type="text" id="u-img" oninput="setI(this.value)"><button class="x" onclick="cls('u-img','img')">✖</button></div></div>
     </div>
 </div>
 
@@ -118,11 +124,12 @@
 <script>
     const audio = new Audio(); audio.preservesPitch = true;
     const db = {
+        de: { slow: "LANGSAM 0.8x", pdf: "PDF LADEN", dict: "WÖRTERBUCH URL", al: "AUDIO LINK", il: "BILD LINK", ready: "BEREIT", play: "SPIELT", pause: "PAUSE", study: "Lernen", master: "Master", test: "Test", up: "ZEIT IST UM" },
         ru: { slow: "ЗАМЕДЛЕНИЕ 0.8x", pdf: "ЗАГРУЗИТЬ PDF", dict: "СЛОВАРЬ URL", al: "АУДИО ССЫЛКА", il: "ФОТО ССЫЛКА", ready: "ГОТОВ", play: "ИГРАЕТ", pause: "ПАУЗА", study: "Ученик", master: "Мастер", test: "Тест", up: "ВРЕМЯ ВЫШЛО" },
+        en: { slow: "SLOW 0.8x", pdf: "LOAD PDF", dict: "DICT URL", al: "AUDIO LINK", il: "IMAGE LINK", ready: "READY", play: "PLAYING", pause: "PAUSED", study: "Study", master: "Master", test: "Test", up: "TIME IS UP" },
         it: { slow: "RALLENTA 0.8x", pdf: "CARICA PDF", dict: "URL DIZIONARIO", al: "LINK AUDIO", il: "LINK IMMAGINE", ready: "PRONTO", play: "PLAY", pause: "PAUSA", study: "Studio", master: "Master", test: "Test", up: "TEMPO SCADUTO" },
         fr: { slow: "RALENTIR 0.8x", pdf: "CHARGER PDF", dict: "URL DICTIONNAIRE", al: "LIEN AUDIO", il: "LIEN IMAGE", ready: "PRÊT", play: "LECTURE", pause: "PAUSE", study: "Étude", master: "Master", test: "Test", up: "TEMPS ÉCOULÉ" },
-        es: { slow: "LENTO 0.8x", pdf: "CARGAR PDF", dict: "URL DICCIONARIO", al: "ENLACE AUDIO", il: "ENLACE IMAGEN", ready: "LISTO", play: "REPRODUCIENDO", pause: "PAUSA", study: "Estudio", master: "Maestro", test: "Prueba", up: "TIEMPO AGOTADO" },
-        en: { slow: "SLOW 0.8x", pdf: "LOAD PDF", dict: "DICT URL", al: "AUDIO LINK", il: "IMAGE LINK", ready: "READY", play: "PLAYING", pause: "PAUSED", study: "Study", master: "Master", test: "Test", up: "TIME IS UP" }
+        es: { slow: "LENTO 0.8x", pdf: "CARGAR PDF", dict: "URL DICCIONARIO", al: "ENLACE AUDIO", il: "ENLACE IMAGEN", ready: "LISTO", play: "REPRODUCIENDO", pause: "PAUSA", study: "Estudio", master: "Maestro", test: "Prueba", up: "TIEMPO AGOTADO" }
     };
 
     function translate() {
@@ -137,10 +144,12 @@
         document.getElementById('opt-master').innerText = t.master;
         document.getElementById('opt-test').innerText = t.test;
         document.getElementById('l-timeup').innerText = t.up;
+        document.getElementById('l-lang').innerText = (l === 'de') ? "SPRACHE" : "LANGUAGE / ЯЗЫК";
+        document.getElementById('l-mode').innerText = (l === 'de') ? "MODUS" : "MODE / РЕЖИМ";
         if(audio.paused) document.getElementById('status').innerText = t.ready;
     }
 
-    // ШТОРКА МАГНИТ
+    // MAGNET RESIZER
     const p = document.getElementById('dict-panel');
     const r = document.getElementById('resizer');
     let isR = false;
