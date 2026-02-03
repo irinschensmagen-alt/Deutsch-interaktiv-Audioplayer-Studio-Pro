@@ -3,105 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AUDIO STUDIO PRO | PURE CELESTIAL</title>
+    <title>AUDIO STUDIO PRO | FINAL EDITION</title>
     <style>
         :root { 
             --gold-line: #d4af37;
             --gold-grad: linear-gradient(135deg, #e5c064 0%, #f9e1a9 50%, #d4af37 100%);
-            /* Ультра-нежный хамелеон: переливы почти прозрачные */
             --chameleon-ultra-soft: radial-gradient(circle at 30% 20%, #ffffff 0%, #f0f9ff 40%, #e6f4ff 100%);
             --sidebar-bg: #fcfdfe;
-            --accent-blue: #5a8bbd;
+            --accent-blue: #1a4a7a; /* Максимальная четкость для шрифта */
         }
         
         body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--sidebar-bg); display: flex; height: 100vh; overflow: hidden; }
 
-        /* SIDEBAR */
-        .sidebar { width: 310px; background: var(--sidebar-bg); padding: 25px; border-right: 1px solid rgba(212, 175, 55, 0.3); flex-shrink: 0; overflow-y: auto; }
-        .logo-box { text-align: center; margin-bottom: 25px; }
-        .logo-img { width: 85px; height: 85px; border-radius: 50%; border: 2px solid var(--gold-line); }
-        .app-title { color: #b8860b; font-weight: 900; font-size: 1rem; margin-top: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        /* SIDEBAR - Широкий для крупных надписей */
+        .sidebar { width: 450px; background: var(--sidebar-bg); padding: 30px; border-right: 3px solid rgba(212, 175, 55, 0.4); flex-shrink: 0; overflow-y: auto; }
+        .logo-box { text-align: center; margin-bottom: 35px; }
+        .logo-img { width: 130px; height: 130px; border-radius: 50%; border: 5px solid var(--gold-line); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .app-title { color: #b8860b; font-weight: 900; font-size: 2.2rem; margin-top: 15px; text-transform: uppercase; letter-spacing: 2px; }
 
         /* PLAYER AREA */
         .player-zone { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; background: var(--chameleon-ultra-soft); }
         
-        /* ЗОЛОТАЯ РАМКА ЦЕНТРАЛЬНОГО ОКНА */
         .cover { 
-            width: 85%; 
-            max-width: 500px; 
+            width: 90%; 
+            max-width: 650px; 
             aspect-ratio: 16/9; 
-            border-radius: 20px; 
+            border-radius: 30px; 
             background: white; 
-            border: 3px solid var(--gold-line); 
-            box-shadow: 0 10px 40px rgba(184, 219, 255, 0.2); 
+            border: 6px solid var(--gold-line); 
+            box-shadow: 0 15px 50px rgba(184, 219, 255, 0.3); 
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            font-size: 6rem; 
-            margin-bottom: 25px; 
+            font-size: 10rem; 
+            margin-bottom: 35px; 
             background-size: cover; 
             background-position: center; 
         }
         .gold-icon { background: var(--gold-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        .time { font-weight: 600; font-size: 1.2rem; margin: 15px 0; color: var(--accent-blue); font-variant-numeric: tabular-nums; }
-        #prog { width: 85%; max-width: 500px; accent-color: var(--gold-line); cursor: pointer; height: 4px; }
+        /* Крупное время и прогресс */
+        .time { font-weight: 900; font-size: 3rem; margin: 20px 0; color: var(--accent-blue); font-variant-numeric: tabular-nums; }
+        #prog { width: 90%; max-width: 650px; accent-color: var(--gold-line); cursor: pointer; height: 15px; }
         
-        .play-btn { width: 80px; height: 80px; border-radius: 50%; background: var(--gold-grad); color: white; border: none; font-size: 2rem; cursor: pointer; box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3); }
-        .nav-btn { background: none; border: none; color: var(--accent-blue); font-size: 2.2rem; cursor: pointer; opacity: 0.7; }
+        .play-btn { width: 130px; height: 130px; border-radius: 50%; background: var(--gold-grad); color: white; border: none; font-size: 4rem; cursor: pointer; box-shadow: 0 10px 30px rgba(212, 175, 55, 0.5); display: flex; align-items: center; justify-content: center; }
+        .nav-btn { background: none; border: none; color: var(--accent-blue); font-size: 4.5rem; cursor: pointer; }
 
-        .slow-btn { background: #7ebce6; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 800; cursor: pointer; width: 100%; margin: 10px 0; text-transform: uppercase; }
+        /* Кнопка замедления - Крупная и четкая */
+        .slow-btn { background: #5a9fd4; color: white; border: none; padding: 25px; border-radius: 15px; font-weight: 900; font-size: 1.8rem; cursor: pointer; width: 100%; margin: 20px 0; text-transform: uppercase; }
 
-        /* ЗОЛОТЫЕ РАМКИ НИЖНИХ ОКОШЕК */
-        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 90%; max-width: 800px; }
+        /* ОКОШКИ С ЗОЛОТЫМИ РАМКАМИ */
+        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; width: 95%; max-width: 1000px; }
         .card { 
             background: white; 
-            padding: 15px; 
-            border-radius: 18px; 
-            border: 1.5px solid var(--gold-line); 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.02); 
+            padding: 25px; 
+            border-radius: 25px; 
+            border: 4px solid var(--gold-line); 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
         }
         
-        label { font-size: 0.65rem; font-weight: 900; color: #b8860b; text-transform: uppercase; margin-bottom: 5px; display: block; }
-        .input-row { display: flex; align-items: center; gap: 8px; background: #f9fdff; padding: 5px 12px; border-radius: 8px; margin-top: 5px; height: 30px; border: 1px solid #eef7fc; }
-        input { border: none; background: transparent; width: 100%; outline: none; font-size: 0.8rem; color: #5a8bbd; }
+        label { font-size: 1.4rem; font-weight: 900; color: #b8860b; text-transform: uppercase; margin-bottom: 12px; display: block; }
+        .input-row { display: flex; align-items: center; gap: 15px; background: #f9fdff; padding: 10px 20px; border-radius: 15px; margin-top: 10px; height: 70px; border: 2px solid #eef7fc; }
         
-        .file-wrapper { position: relative; width: 100%; height: 100%; display: flex; align-items: center; overflow: hidden; }
-        .file-label { font-size: 0.75rem; color: #9abedb; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .x-btn { color: #ff9e9e; border: none; background: none; font-weight: bold; cursor: pointer; font-size: 1rem; opacity: 0.6; }
+        input, select { border: none; background: transparent; width: 100%; outline: none; font-size: 1.6rem; font-weight: 900; color: var(--accent-blue); }
+        
+        .file-label { font-size: 1.4rem; font-weight: 900; color: #78a1c4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .x-btn { color: #ff6b6b; border: none; background: none; font-weight: 900; cursor: pointer; font-size: 2.5rem; }
     </style>
 </head>
 <body>
 
 <div class="sidebar">
     <div class="logo-box">
-        <a href="https://t.me/+P6O260Y7YmZkMDdi" target="_blank">
-            <img src="https://irinschensmagen-alt.github.io/Audioplayer-Studio-Pro/logo.png" class="logo-img">
-        </a>
+        <img src="https://irinschensmagen-alt.github.io/Audioplayer-Studio-Pro/logo.png" class="logo-img">
         <div class="app-title">Audio Studio Pro</div>
     </div>
 
     <label id="l-lang">LANGUAGE</label>
-    <div class="card"><select id="langSelect" onchange="translateUI()" style="width:100%; border:none; outline:none; background:transparent; font-weight: 600; color: var(--accent-blue);"></select></div>
+    <div class="card"><select id="langSelect" onchange="translateUI()"></select></div>
 
     <label id="l-mode">MODE</label>
-    <div class="card"><select id="modeSelect" onchange="setMode()" style="width:100%; border:none; outline:none; background:transparent; font-weight: 600; color: var(--accent-blue);">
-        <option value="study" id="opt-study"></option>
-        <option value="master" id="opt-master"></option>
-        <option value="test" id="opt-test"></option>
-    </select></div>
+    <div class="card">
+        <select id="modeSelect">
+            <option value="study" id="opt-study"></option>
+            <option value="master" id="opt-master"></option>
+            <option value="test" id="opt-test"></option>
+        </select>
+    </div>
 
     <button id="slowBtn" class="slow-btn" onclick="toggleSlow()">🐢 <span id="l-slow"></span></button>
 
     <div class="card">
         <label id="l-materials">MATERIALS</label>
         <div class="input-row">
-            <div class="file-wrapper"><input type="file" id="f-univ" onchange="updateFileName(this)" style="position:absolute; opacity:0; width:100%; cursor:pointer;"><span class="file-label" id="f-univ-btn"></span></div>
+            <div style="position:relative; width:100%; height:100%; display:flex; align-items:center;">
+                <input type="file" id="f-univ" onchange="updateFileName(this)" style="position:absolute; opacity:0; width:100%; cursor:pointer;">
+                <span class="file-label" id="f-univ-btn"></span>
+            </div>
             <button class="x-btn" onclick="clearF('f-univ')">✖</button>
-        </div>
-        <div class="input-row">
-            <input type="text" id="u-dict" oninput="loadD(this.value)">
-            <button class="x-btn" onclick="clearF('u-dict')">✖</button>
         </div>
     </div>
 </div>
@@ -110,7 +109,8 @@
     <div class="cover" id="cover"><span class="gold-icon">♫</span></div>
     <input type="range" id="prog" value="0" step="0.1" oninput="manualSeek(this.value)">
     <div class="time" id="time-display">00:00 / 00:00</div>
-    <div style="display:flex; align-items:center; gap:40px; margin-bottom:25px;">
+    
+    <div style="display:flex; align-items:center; gap:70px; margin-bottom:35px;">
         <button class="nav-btn" onclick="rewind(-10)">⏪</button>
         <button class="play-btn" id="play-btn" onclick="togglePlay()">▶</button>
         <button class="nav-btn" onclick="rewind(10)">⏩</button>
@@ -121,7 +121,10 @@
             <label id="l-al">AUDIO</label>
             <div class="input-row"><input type="text" id="u-aud" oninput="audio.src=this.value"><button class="x-btn" onclick="clearF('u-aud')">✖</button></div>
             <div class="input-row">
-                <div class="file-wrapper"><input type="file" id="f-aud" accept="audio/*" onchange="updateFileName(this)" style="position:absolute; opacity:0; width:100%; cursor:pointer;"><span class="file-label" id="f-aud-btn"></span></div>
+                <div style="position:relative; width:100%; height:100%; display:flex; align-items:center;">
+                    <input type="file" id="f-aud" accept="audio/*" onchange="updateFileName(this)" style="position:absolute; opacity:0; width:100%; cursor:pointer;">
+                    <span class="file-label" id="f-aud-btn"></span>
+                </div>
                 <button class="x-btn" onclick="clearF('f-aud')">✖</button>
             </div>
         </div>
@@ -129,7 +132,10 @@
             <label id="l-il">IMAGE</label>
             <div class="input-row"><input type="text" id="u-img" oninput="setI(this.value)"><button class="x-btn" onclick="clearF('u-img')">✖</button></div>
             <div class="input-row">
-                <div class="file-wrapper"><input type="file" id="f-img" accept="image/*" onchange="updateFileName(this)" style="position:absolute; opacity:0; width:100%; cursor:pointer;"><span class="file-label" id="f-img-btn"></span></div>
+                <div style="position:relative; width:100%; height:100%; display:flex; align-items:center;">
+                    <input type="file" id="f-img" accept="image/*" onchange="updateFileName(this)" style="position:absolute; opacity:0; width:100%; cursor:pointer;">
+                    <span class="file-label" id="f-img-btn"></span>
+                </div>
                 <button class="x-btn" onclick="clearF('f-img')">✖</button>
             </div>
         </div>
@@ -137,29 +143,26 @@
 </div>
 
 <script>
-    const audio = new Audio(); audio.preservesPitch = true;
-    // Словари теперь БЕЗ двуязычия в строках. Только чистый перевод.
+    const audio = new Audio();
     const langs = {
-        de: { name: "Deutsch", lang: "SPRACHE", mode: "MODUS", slow: "LANGSAM 0.8x", materials: "MATERIALIEN", al: "AUDIO", il: "BILD", study: "Lernen", master: "Master", test: "Test", link: "Link", select: "Datei wählen" },
-        ru: { name: "Русский", lang: "ЯЗЫК", mode: "РЕЖИМ", slow: "ЗАМЕДЛЕНИЕ 0.8x", materials: "МАТЕРИАЛЫ", al: "АУДИО", il: "ФОТО", study: "Ученик", master: "Мастер", test: "Тест", link: "Ссылка", select: "Выбрать" },
-        en: { name: "English", lang: "LANGUAGE", mode: "MODE", slow: "SLOW MOTION 0.8x", materials: "MATERIALS", al: "AUDIO", il: "IMAGE", study: "Study", master: "Master", test: "Test", link: "Link", select: "Choose" },
-        fr: { name: "Français", lang: "LANGUE", mode: "MODE", slow: "LENT 0.8x", materials: "MATÉRIELS", al: "AUDIO", il: "IMAGE", study: "Étude", master: "Maître", test: "Test", link: "Lien", select: "Choisir" }
+        de: { name: "Deutsch", lang: "SPRACHE", mode: "MODUS", slow: "LANGSAM 0.8x", materials: "MATERIALIEN", al: "AUDIO", il: "BILD", study: "Lernen", master: "Master", test: "Test", select: "Wählen", link: "Link" },
+        ru: { name: "Русский", lang: "ЯЗЫК", mode: "РЕЖИМ", slow: "ЗАМЕДЛЕНИЕ 0.8x", materials: "МАТЕРИАЛЫ", al: "АУДИО", il: "ФОТО", study: "Ученик", master: "Мастер", test: "Тест", select: "Выбрать", link: "Ссылка" },
+        en: { name: "English", lang: "LANGUAGE", mode: "MODE", slow: "SLOW 0.8x", materials: "MATERIALS", al: "AUDIO", il: "IMAGE", study: "Study", master: "Master", test: "Test", select: "Choose", link: "Link" },
+        fr: { name: "Français", lang: "LANGUE", mode: "MODE", slow: "LENT 0.8x", materials: "MATÉRIELS", al: "AUDIO", il: "IMAGE", study: "Étude", master: "Maître", test: "Test", select: "Choisir", link: "Lien" },
+        ja: { name: "日本語", lang: "言語", mode: "モード", slow: "スロー 0.8x", materials: "教材", al: "オーディオ", il: "画像", study: "学習", master: "マスター", test: "テスト", select: "選択", link: "リンク" },
+        pt: { name: "Português", lang: "IDIOMA", mode: "MODO", slow: "LENTO 0.8x", materials: "MATERIAIS", al: "ÁUDIO", il: "IMAGEM", study: "Estudo", master: "Mestre", test: "Teste", select: "Escolher", link: "Link" }
     };
 
     const sel = document.getElementById('langSelect');
     Object.keys(langs).forEach(k => sel.add(new Option(langs[k].name, k)));
-    sel.value = 'de';
+    sel.value = 'ru';
 
     function translateUI() {
-        const t = langs[sel.value] || langs['de'];
+        const t = langs[sel.value];
         ['lang','mode','slow','materials','al','il'].forEach(id => document.getElementById('l-'+id).innerText = t[id]);
         ['study','master','test'].forEach(m => document.getElementById('opt-'+m).innerText = t[m]);
-        
-        // Убираем двуязычие в плейсхолдерах и кнопках
         document.getElementById('u-aud').placeholder = t.link;
         document.getElementById('u-img').placeholder = t.link;
-        document.getElementById('u-dict').placeholder = "URL";
-
         ['f-univ-btn', 'f-aud-btn', 'f-img-btn'].forEach(id => {
             const el = document.getElementById(id);
             if (!el.hasAttribute('data-active')) el.innerText = "📁 " + t.select;
@@ -172,30 +175,24 @@
             btn.innerText = "📄 " + input.files[0].name;
             btn.setAttribute('data-active', 'true');
             btn.style.color = "#d4af37";
-            const url = URL.createObjectURL(input.files[0]);
-            if(input.id === 'f-aud') audio.src = url;
-            if(input.id === 'f-img') setI(url);
         }
     }
 
-    function clearF(id) { 
+    function clearF(id) {
         const el = document.getElementById(id); el.value = '';
         if(id.startsWith('f-')) {
             const btn = document.getElementById(id + '-btn');
-            btn.removeAttribute('data-active'); 
-            btn.innerText = "📁 " + langs[sel.value].select; 
-            btn.style.color = "#9abedb";
+            btn.removeAttribute('data-active');
+            btn.innerText = "📁 " + langs[sel.value].select;
+            btn.style.color = "#78a1c4";
         }
-        if(id.includes('aud')) { audio.pause(); audio.src = ''; }
-        if(id.includes('img')) setI('');
     }
 
     function togglePlay() { if(audio.src) audio.paused ? audio.play() : audio.pause(); }
     function rewind(v) { audio.currentTime += v; }
     function manualSeek(v) { audio.currentTime = v; }
-    function toggleSlow() { audio.playbackRate = (audio.playbackRate === 1 ? 0.8 : 1); document.getElementById('slowBtn').classList.toggle('active', audio.playbackRate === 0.8); }
+    function toggleSlow() { audio.playbackRate = (audio.playbackRate === 1 ? 0.8 : 1); }
     function setI(u) { const c = document.getElementById('cover'); c.style.backgroundImage = u ? `url(${u})` : 'none'; c.innerHTML = u ? '' : '<span class="gold-icon">♫</span>'; }
-    function setMode() { audio.loop = (document.getElementById('modeSelect').value === 'master'); }
 
     audio.ontimeupdate = () => {
         const pr = document.getElementById('prog'); pr.max = audio.duration || 0; pr.value = audio.currentTime;
