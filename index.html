@@ -3,164 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Audio Studio EDU Global Pro</title>
+    <title>Audio Studio EDU Professional</title>
     <style>
         :root {
             --primary-color: #6c5ce7;
-            --bg-gradient: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
-            --panel-bg: #ffffff;
+            --glass: rgba(255, 255, 255, 0.85);
         }
 
-        /* Шаблоны */
-        .template-1 { --primary-color: #6c5ce7; --bg-gradient: linear-gradient(135deg, #a29bfe, #6c5ce7); }
-        .template-2 { --primary-color: #ff7675; --bg-gradient: linear-gradient(135deg, #fab1a0, #ff7675); }
-        .template-3 { --primary-color: #00b894; --bg-gradient: linear-gradient(135deg, #55efc4, #00b894); }
-        .template-4 { --primary-color: #0984e3; --bg-gradient: linear-gradient(135deg, #74b9ff, #0984e3); }
-        .template-5 { --primary-color: #e17055; --bg-gradient: linear-gradient(135deg, #ffcc33, #e17055); }
-        .template-6 { --primary-color: #fd79a8; --bg-gradient: linear-gradient(135deg, #fab1a0, #fd79a8); }
+        /* Градиенты-Хамелеоны */
+        .cham-1 { background: linear-gradient(45deg, #a29bfe, #6c5ce7, #81ecec, #74b9ff); }
+        .cham-2 { background: linear-gradient(45deg, #fab1a0, #ff7675, #fd79a8, #a29bfe); }
+        .cham-3 { background: linear-gradient(45deg, #55efc4, #00b894, #81ecec, #00cec9); }
+        .cham-4 { background: linear-gradient(45deg, #ffeaa7, #fab1a0, #e17055, #d63031); }
 
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background: var(--bg-gradient);
-            display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0;
-            transition: 0.5s;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; margin: 0; transition: 0.5s;
         }
 
+        @keyframes gradientBG { 0% {background-position: 0% 50%;} 50% {background-position: 100% 50%;} 100% {background-position: 0% 50%;} }
+
         .container {
-            display: grid; grid-template-columns: 380px 520px; gap: 25px; padding: 20px;
+            display: grid; grid-template-columns: 380px 520px; gap: 20px; padding: 20px;
+            max-width: 1000px; width: 100%;
         }
 
         .panel {
-            background: var(--panel-bg); padding: 25px; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            background: var(--glass); backdrop-filter: blur(10px);
+            padding: 25px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.3);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
         }
 
-        .header-area { 
-            display: flex; align-items: center; gap: 15px; margin-bottom: 20px; border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; 
-        }
-        
-        /* Логотип теперь ищет logo.png */
-        .logo { 
-            width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-color);
-            background: #f0f0f0;
-        }
+        .header-area { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+        .logo { width: 55px; height: 55px; border-radius: 50%; border: 2px solid var(--primary-color); object-fit: cover; }
 
-        .form-group { margin-bottom: 15px; }
-        label { display: block; font-size: 0.85rem; color: #666; margin-bottom: 5px; font-weight: 600; }
+        .form-group { margin-bottom: 12px; }
+        label { display: block; font-size: 0.8rem; color: #555; margin-bottom: 4px; font-weight: 700; text-transform: uppercase; }
         
         select, input, textarea {
-            width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd; font-size: 0.9rem; box-sizing: border-box;
+            width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.1);
+            font-size: 0.9rem; background: rgba(255,255,255,0.9);
         }
 
         .btn {
             width: 100%; min-height: 50px; border: none; border-radius: 15px;
             background: var(--primary-color); color: white; cursor: pointer; font-weight: bold;
-            display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 12px;
-            font-size: 1rem; transition: 0.3s;
+            display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px;
+            transition: 0.3s;
         }
-        .btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(108, 92, 231, 0.4); }
 
-        .mixer-box { background: #f9f9fb; padding: 15px; border-radius: 18px; border: 1px solid #eee; margin-top: 10px; }
-        .mixer-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; font-size: 0.85rem; }
-        .mixer-row input { width: 150px; accent-color: var(--primary-color); }
+        .mixer-box { background: rgba(0,0,0,0.03); padding: 15px; border-radius: 20px; margin-top: 10px; }
+        .mixer-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; font-size: 0.85rem; }
+        .mixer-row input { width: 140px; }
 
-        .player-display { display: flex; flex-direction: column; align-items: center; }
         .cover-art { 
-            width: 100%; height: 260px; background: #eee center/cover no-repeat; border-radius: 20px; 
-            margin-bottom: 15px; border: 5px solid #fff; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            width: 100%; height: 280px; border-radius: 20px; border: 6px solid #fff;
+            background: #eee center/cover no-repeat; transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
         }
 
-        #timer-display { font-size: 1.5rem; font-weight: bold; color: #ff4757; margin-bottom: 10px; display: none; }
-
-        .controls { display: flex; gap: 20px; margin: 15px 0; }
+        .controls { display: flex; gap: 15px; margin: 20px 0; }
         .control-btn { 
             background: var(--primary-color); color: white; border: none; width: 60px; height: 60px; 
-            border-radius: 20px; cursor: pointer; font-size: 1.5rem; transition: 0.2s;
+            border-radius: 20px; cursor: pointer; font-size: 1.5rem;
         }
-        .control-btn:active { transform: scale(0.9); }
+        .control-btn:disabled { background: #ccc; cursor: not-allowed; }
 
-        #iframe-output { height: 70px; background: #f4f4f9; border: 1px solid #ccd; font-family: monospace; font-size: 0.8rem; padding: 10px; }
+        #status-tag { 
+            background: #6c5ce7; color: white; padding: 4px 12px; border-radius: 20px; 
+            font-size: 0.7rem; font-weight: bold; margin-bottom: 10px; display: inline-block;
+        }
+
+        #iframe-output { height: 60px; font-family: monospace; font-size: 0.75rem; margin-top: 10px; resize: none; }
     </style>
 </head>
-<body class="template-1">
+<body class="cham-1">
 
 <div class="container">
     <div class="panel">
         <div class="header-area">
-            <img src="logo.png" class="logo" onerror="this.src='https://via.placeholder.com/55?text=Logo'" alt="Logo">
-            <h2 style="margin:0;">Audio Studio EDU</h2>
+            <img src="logo.png" class="logo" onerror="this.src='https://via.placeholder.com/55?text=EDU'" alt="Logo">
+            <h2 style="margin:0; font-size: 1.3rem;">Audio Studio EDU</h2>
         </div>
         
         <div class="form-group">
-            <label>🌐 Язык интерфейса</label>
+            <label>🌐 Язык изучения</label>
             <select id="langSelect">
-                <option value="ru">Русский</option>
-                <option value="zh">中文</option>
-                <option value="de">Deutsch</option>
-                <option value="en">English</option>
-            </select>
+                <option value="de" data-img="berlin">Deutsch (Германия)</option>
+                <option value="ru" data-img="moscow">Русский (Россия)</option>
+                <option value="en" data-img="london">English (UK)</option>
+                <option value="zh" data-img="shanghai">中文 (Китай)</option>
+                <option value="fr" data-img="paris">Français (Франция)</option>
+                <option value="es" data-img="madrid">Español (Испания)</option>
+                <option value="ja" data-img="tokyo">日本語 (Япония)</option>
+                <option value="it" data-img="rome">Italiano (Италия)</option>
+                <option value="tr" data-img="istanbul">Türkçe (Турция)</option>
+                <option value="hi" data-img="delhi">हिन्दी (Индия)</option>
+                </select>
         </div>
 
         <div class="form-group">
-            <label>🎓 Режим обучения</label>
+            <label>🎓 Режим работы</label>
             <select id="modeSelect">
-                <option value="teacher">Учитель (Teacher)</option>
-                <option value="student">Ученик (Student)</option>
-                <option value="exam">Экзамен (Exam)</option>
+                <option value="teacher">👨‍🏫 Учитель (Master)</option>
+                <option value="student">🧑‍🎓 Ученик (Slow Motion)</option>
+                <option value="exam">📝 Экзамен (Play Count: 2)</option>
             </select>
         </div>
 
         <div class="form-group">
-            <label>🎨 Выберите тему (Template)</label>
-            <select id="templateSelect">
-                <option value="template-1">Soft Gradient 1</option>
-                <option value="template-2">Soft Gradient 2</option>
-                <option value="template-3">Soft Gradient 3</option>
-                <option value="template-4">Soft Gradient 4</option>
-                <option value="template-5">Soft Gradient 5</option>
-                <option value="template-6">Soft Gradient 6</option>
+            <label>🎨 Хамелеон-тема</label>
+            <select id="themeSelect">
+                <option value="cham-1">Deep Ocean</option>
+                <option value="cham-2">Sunset Rose</option>
+                <option value="cham-3">Mint Fresh</option>
+                <option value="cham-4">Volcano Lava</option>
             </select>
         </div>
 
         <div class="mixer-box">
-            <label style="color: var(--primary-color); font-weight: bold; margin-bottom: 10px; display: block;">🎚️ Аудиомикшер PRO</label>
+            <label id="mixer-title">🎚️ Аудиомикшер</label>
             <div class="mixer-row"><span>Громкость</span><input type="range" id="volRange" min="0" max="1" step="0.1" value="1"></div>
-            <div class="mixer-row"><span>Бас</span><input type="range" id="bassRange" min="-10" max="20" step="1" value="0"></div>
-            <div class="mixer-row" style="background: #efecff; padding: 8px; border-radius: 10px;">
-                <span>🤖 Эффект РОБОТ</span>
-                <input type="checkbox" id="robotCheck" style="width: 22px; height: 22px;">
+            <div id="extra-mixer">
+                <div class="mixer-row"><span>Бас</span><input type="range" id="bassRange" min="-10" max="20" step="1" value="0"></div>
+                <div class="mixer-row"><span>🤖 Робот</span><input type="checkbox" id="robotCheck"></div>
             </div>
+            <button class="btn" id="slowBtn" style="background: #a29bfe; min-height: 35px; display: none;">🐢 Замедлить 0.8x</button>
         </div>
 
-        <button class="btn" id="randomCoverBtn" style="background: #55efc4; color: #2d3436;">✨ Случайная обложка</button>
-        
-        <label style="margin-top:20px;">📦 Код iframe для Genially:</label>
+        <label style="margin-top:20px;">📦 Код для Genially:</label>
         <textarea id="iframe-output" readonly></textarea>
-        <button class="btn" id="copyIframeBtn" style="background: #a29bfe;">Скопировать код</button>
+        <button class="btn" id="copyBtn" style="background: #6c5ce7;">Скопировать код</button>
     </div>
 
     <div class="panel player-display">
-        <div class="cover-art" id="coverArt" style="background-image: url('https://picsum.photos/seed/music/500/500');"></div>
+        <div id="status-tag">РЕЖИМ: УЧИТЕЛЬ</div>
+        <div class="cover-art" id="coverArt"></div>
         
-        <div id="timer-display">02:00</div>
-        
-        <canvas id="visualizer" style="width:100%; height:60px;"></canvas>
+        <canvas id="visualizer" style="width:100%; height:50px;"></canvas>
         
         <div style="width:100%;">
-            <div id="timeDisplay" style="text-align:center; font-size:1rem; margin-bottom: 8px; font-family: monospace;">00:00 / 00:00</div>
+            <div id="timeDisplay" style="text-align:center; font-family: monospace; font-weight: bold;">00:00 / 00:00</div>
             <input type="range" id="progressBar" value="0" min="0" step="0.1" style="width:100%;">
         </div>
 
         <div class="controls">
             <button class="control-btn" id="rewindBtn">⏪</button>
-            <button class="control-btn" id="playBtn" style="width:80px; height:80px; border-radius: 50%; font-size: 2rem;">▶</button>
+            <button class="control-btn" id="playBtn" style="width:80px; height:80px; border-radius: 50%;">▶</button>
             <button class="control-btn" id="forwardBtn">⏩</button>
         </div>
         
-        <div class="form-group" style="width:100%;">
-            <label>📁 Загрузить Аудио и Обложку</label>
-            <input type="file" id="audioUpload" accept="audio/*">
-            <input type="file" id="coverUpload" accept="image/*" style="margin-top:8px;">
-        </div>
+        <input type="file" id="audioUpload" accept="audio/*">
         <audio id="mainAudio" crossorigin="anonymous"></audio>
     </div>
 </div>
@@ -168,119 +165,126 @@
 <script>
     const audio = document.getElementById('mainAudio');
     const playBtn = document.getElementById('playBtn');
+    const langSelect = document.getElementById('langSelect');
     const modeSelect = document.getElementById('modeSelect');
-    const timerDisplay = document.getElementById('timer-display');
-    const templateSelect = document.getElementById('templateSelect');
+    const coverArt = document.getElementById('coverArt');
     
-    let audioContext, analyser, source, bassFilter, distortion;
-    let examInterval;
+    let playCount = 0;
+    let audioContext, analyser, source, distortion;
 
-    // Инициализация звукового движка
+    // 1. Умные обложки по странам
+    function updateCover() {
+        const keyword = langSelect.options[langSelect.selectedIndex].getAttribute('data-img');
+        coverArt.style.backgroundImage = `url('https://source.unsplash.com/500x500/?${keyword},culture')`;
+    }
+    langSelect.onchange = updateCover;
+    updateCover();
+
+    // 2. Логика Режимов
+    modeSelect.onchange = () => {
+        const mode = modeSelect.value;
+        const tag = document.getElementById('status-tag');
+        const slowBtn = document.getElementById('slowBtn');
+        
+        // Сброс ограничений
+        playCount = 0;
+        audio.playbackRate = 1.0;
+        document.getElementById('progressBar').disabled = false;
+        document.getElementById('rewindBtn').disabled = false;
+        document.getElementById('forwardBtn').disabled = false;
+
+        if (mode === 'teacher') {
+            tag.innerText = "РЕЖИМ: УЧИТЕЛЬ";
+            slowBtn.style.display = 'none';
+        } else if (mode === 'student') {
+            tag.innerText = "РЕЖИМ: УЧЕНИК";
+            slowBtn.style.display = 'block';
+        } else {
+            tag.innerText = "РЕЖИМ: ЭКЗАМЕН";
+            slowBtn.style.display = 'none';
+        }
+    };
+
+    // 3. Логика Экзамена (Блокировка на 3-й раз)
+    playBtn.onclick = () => {
+        if (!audio.src) return;
+        
+        if (audio.paused) {
+            if (modeSelect.value === 'exam') {
+                playCount++;
+                if (playCount >= 3) {
+                    document.getElementById('progressBar').disabled = true;
+                    document.getElementById('rewindBtn').disabled = true;
+                    document.getElementById('forwardBtn').disabled = true;
+                    document.getElementById('status-tag').innerText = "ЭКЗАМЕН: ПЕРЕМОТКА ЗАБЛОКИРОВАНА (3-е прослушивание)";
+                }
+            }
+            audio.play();
+            playBtn.innerText = '⏸';
+        } else {
+            audio.pause();
+            playBtn.innerText = '▶';
+        }
+    };
+
+    // 4. Замедление для ученика
+    document.getElementById('slowBtn').onclick = function() {
+        audio.playbackRate = (audio.playbackRate === 1.0) ? 0.8 : 1.0;
+        this.innerText = (audio.playbackRate === 0.8) ? "▶ Нормально 1x" : "🐢 Замедлить 0.8x";
+    };
+
+    // 5. Тема Хамелеон
+    document.getElementById('themeSelect').onchange = (e) => document.body.className = e.target.value;
+
+    // 6. Микшер Робота
     function initAudio() {
         if (!audioContext) {
             audioContext = new (window.AudioContext || window.webkitAudioContext)();
             analyser = audioContext.createAnalyser();
             source = audioContext.createMediaElementSource(audio);
-            
-            bassFilter = audioContext.createBiquadFilter();
-            bassFilter.type = "lowshelf";
-            bassFilter.frequency.value = 200;
-
             distortion = audioContext.createWaveShaper();
-            distortion.oversample = '4x';
-
-            source.connect(bassFilter).connect(distortion).connect(analyser).connect(audioContext.destination);
-            drawVisualizer();
+            source.connect(distortion).connect(analyser).connect(audioContext.destination);
         }
-    }
-
-    // Эффект Робота
-    function makeDistortion(amount) {
-        let n = 44100, curve = new Float32Array(n), deg = Math.PI / 180;
-        for (let i = 0 ; i < n; ++i ) {
-            let x = i * 2 / n - 1;
-            curve[i] = ( 3 + amount ) * x * 20 * deg / ( Math.PI + amount * Math.abs(x) );
-        }
-        return curve;
     }
 
     document.getElementById('robotCheck').onchange = (e) => {
-        if (distortion) distortion.curve = e.target.checked ? makeDistortion(400) : null;
-    };
-
-    document.getElementById('volRange').oninput = (e) => audio.volume = e.target.value;
-    document.getElementById('bassRange').oninput = (e) => { if (bassFilter) bassFilter.gain.value = e.target.value; };
-
-    // Таймер Экзамена
-    modeSelect.onchange = () => {
-        timerDisplay.style.display = (modeSelect.value === 'exam') ? 'block' : 'none';
-        timerDisplay.innerText = "02:00";
-    };
-
-    function startExam() {
-        let time = 120;
-        clearInterval(examInterval);
-        examInterval = setInterval(() => {
-            time--;
-            let m = Math.floor(time/60), s = time%60;
-            timerDisplay.innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-            if (time <= 0) { clearInterval(examInterval); audio.pause(); }
-        }, 1000);
-    }
-
-    // Управление плеером
-    playBtn.onclick = () => {
-        if (!audio.src) return;
         initAudio();
-        if (audio.paused) {
-            audio.play();
-            playBtn.innerText = '⏸';
-            if (modeSelect.value === 'exam') startExam();
+        if (e.target.checked) {
+            const n = 44100;
+            const curve = new Float32Array(n);
+            for (let i = 0 ; i < n; ++i ) {
+                let x = i * 2 / n - 1;
+                curve[i] = (3 + 400) * x * 20 * (Math.PI/180) / (Math.PI + 400 * Math.abs(x));
+            }
+            distortion.curve = curve;
         } else {
-            audio.pause();
-            playBtn.innerText = '▶';
-            clearInterval(examInterval);
+            distortion.curve = null;
         }
     };
 
-    // Случайная обложка
-    document.getElementById('randomCoverBtn').onclick = () => {
-        const id = Math.floor(Math.random() * 1000);
-        document.getElementById('coverArt').style.backgroundImage = `url('https://picsum.photos/seed/${id}/500/500')`;
+    // Системные функции
+    document.getElementById('audioUpload').onchange = (e) => {
+        if (e.target.files[0]) { audio.src = URL.createObjectURL(e.target.files[0]); audio.load(); }
     };
 
-    // Визуализатор
-    function drawVisualizer() {
-        requestAnimationFrame(drawVisualizer);
-        const data = new Uint8Array(analyser.frequencyBinCount);
-        analyser.getByteFrequencyData(data);
-        const ctx = document.getElementById('visualizer').getContext('2d');
-        ctx.clearRect(0, 0, 300, 100);
-        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary-color');
-        for (let i = 0; i < 60; i++) ctx.fillRect(i * 5, 60, 3, -(data[i] / 4));
-    }
+    audio.ontimeupdate = () => {
+        const bar = document.getElementById('progressBar');
+        if (!bar.disabled) bar.max = audio.duration || 0;
+        bar.value = audio.currentTime;
+        const fmt = s => new Date(s * 1000).toISOString().substr(14, 5);
+        document.getElementById('timeDisplay').innerText = `${fmt(audio.currentTime)} / ${fmt(audio.duration || 0)}`;
+    };
 
-    // Iframe и Прогресс
-    document.getElementById('copyIframeBtn').onclick = () => {
+    document.getElementById('progressBar').oninput = (e) => audio.currentTime = e.target.value;
+    document.getElementById('rewindBtn').onclick = () => audio.currentTime -= 10;
+    document.getElementById('forwardBtn').onclick = () => audio.currentTime += 10;
+    document.getElementById('volRange').oninput = (e) => audio.volume = e.target.value;
+
+    document.getElementById('copyBtn').onclick = () => {
         const code = `<iframe src="${window.location.href}" width="100%" height="750px" frameborder="0"></iframe>`;
         navigator.clipboard.writeText(code);
         alert("Код для Genially скопирован!");
     };
-
-    templateSelect.onchange = () => document.body.className = templateSelect.value;
-    
-    document.getElementById('audioUpload').onchange = (e) => { if (e.target.files[0]) { audio.src = URL.createObjectURL(e.target.files[0]); audio.load(); }};
-    document.getElementById('coverUpload').onchange = (e) => { if (e.target.files[0]) document.getElementById('coverArt').style.backgroundImage = `url(${URL.createObjectURL(e.target.files[0])})`; };
-    
-    audio.ontimeupdate = () => {
-        document.getElementById('progressBar').max = audio.duration || 0;
-        document.getElementById('progressBar').value = audio.currentTime;
-        const fmt = s => new Date(s * 1000).toISOString().substr(14, 5);
-        document.getElementById('timeDisplay').innerText = `${fmt(audio.currentTime)} / ${fmt(audio.duration || 0)}`;
-    };
-    document.getElementById('progressBar').oninput = (e) => audio.currentTime = e.target.value;
-    document.getElementById('rewindBtn').onclick = () => audio.currentTime -= 10;
-    document.getElementById('forwardBtn').onclick = () => audio.currentTime += 10;
 </script>
 </body>
 </html>
