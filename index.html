@@ -3,45 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AUDIO STUDIO PRO | GOLD & SKY</title>
+    <title>AUDIO STUDIO PRO</title>
     <style>
         :root { 
             --gold: linear-gradient(135deg, #d4af37 0%, #f1c40f 50%, #b8860b 100%);
-            --sky-bg: #e0f2f7; /* Нежно-голубой фон */
+            --sky-bg: #e0f2f7; 
             --sky-light: #f0faff;
             --accent-gold: #b8860b;
-            --blue-ui: #0070c0; /* Синий как на стрелках */
+            --blue-ui: #0070c0; 
         }
         
         body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--sky-bg); display: flex; height: 100vh; overflow: hidden; }
 
         /* --- SIDEBAR --- */
-        .sidebar { width: 330px; background: var(--sky-light); padding: 25px; border-right: 3px solid #d4af37; flex-shrink: 0; overflow-y: auto; z-index: 1000; box-shadow: 5px 0 15px rgba(0,0,0,0.05); }
+        .sidebar { width: 330px; background: var(--sky-light); padding: 25px; border-right: 3px solid #d4af37; flex-shrink: 0; overflow-y: auto; z-index: 1000; }
         .logo-box { text-align: center; margin-bottom: 30px; }
         .logo-img { width: 100px; height: 100px; border-radius: 50%; border: 4px solid #d4af37; }
-        .app-title { color: var(--accent-gold); font-weight: 900; font-size: 1.2rem; margin-top: 15px; text-transform: uppercase; letter-spacing: 1px; }
+        .app-title { color: var(--accent-gold); font-weight: 900; font-size: 1.2rem; margin-top: 15px; text-transform: uppercase; }
 
         /* --- PLAYER AREA --- */
         .player-zone { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; position: relative; }
-        .cover { width: 90%; max-width: 550px; aspect-ratio: 16/9; border-radius: 30px; background: white; border: 8px solid white; box-shadow: 0 20px 50px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; font-size: 8rem; margin-bottom: 30px; background-size: cover; background-position: center; }
+        .cover { width: 90%; max-width: 550px; aspect-ratio: 16/9; border-radius: 30px; background: white; border: 8px solid white; box-shadow: 0 20px 50px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; font-size: 8rem; margin-bottom: 30px; background-size: cover; background-position: center; }
         .gold-icon { background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* --- CONTROLS --- */
+        /* --- CONTROLS (БЕЗ РАМОК) --- */
         #prog { width: 90%; max-width: 550px; accent-color: var(--accent-gold); cursor: pointer; height: 8px; }
         .time { font-weight: 900; font-size: 2.5rem; margin: 20px 0; color: #445; font-variant-numeric: tabular-nums; }
         .play-btn { width: 100px; height: 100px; border-radius: 50%; background: var(--gold); color: white; border: none; font-size: 3rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(184,134,11,0.4); }
-        .nav-btn { background: var(--blue-ui); color: white; border: none; width: 60px; height: 45px; border-radius: 12px; font-size: 1.5rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        
+        /* Кнопки перемотки БЕЗ чёрных рамок */
+        .nav-btn { background: none; border: none; color: var(--blue-ui); font-size: 3rem; cursor: pointer; padding: 0; display: flex; align-items: center; justify-content: center; }
 
         .slow-btn { background: var(--blue-ui); color: white; border: none; padding: 16px; border-radius: 14px; font-weight: 900; cursor: pointer; width: 100%; margin: 10px 0; text-transform: uppercase; }
         .slow-btn.active { background: #e67e22; }
 
-        /* --- SMART TOGGLE PANEL --- */
+        /* --- DICT PANEL --- */
         .dict-panel { width: 0px; background: white; border-left: 0px solid #d4af37; display: flex; position: relative; transition: width 0.4s ease; }
         .resizer { width: 40px; cursor: pointer; position: absolute; left: -20px; top: 0; bottom: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; }
         .resizer::after { content: '◀▶'; color: var(--accent-gold); font-weight: bold; opacity: 0.5; }
         iframe { width: 100%; height: 100%; border: none; }
 
-        /* --- CARDS & INPUTS --- */
+        /* --- UI ELEMENTS --- */
         .card { background: #fff; padding: 15px; border-radius: 20px; border: 1px solid rgba(184,134,11,0.1); margin-bottom: 15px; }
         label { font-size: 0.75rem; font-weight: 900; color: var(--accent-gold); text-transform: uppercase; margin-bottom: 8px; display: block; }
         .input-row { display: flex; align-items: center; gap: 10px; background: #f0faff; padding: 8px 15px; border-radius: 12px; margin-top: 8px; }
@@ -65,16 +67,16 @@
     <label id="l-lang">LANGUAGE</label>
     <div class="card"><select id="langSelect" onchange="translateUI()"></select></div>
 
-    <label id="l-mode" style="margin-top:20px;">MODE</label>
+    <label id="l-mode">MODE</label>
     <div class="card">
         <select id="modeSelect" onchange="setMode()">
-            <option value="study" id="opt-study"></option>
-            <option value="master" id="opt-master"></option>
-            <option value="test" id="opt-test"></option>
+            <option value="study" id="opt-study">Study</option>
+            <option value="master" id="opt-master">Master</option>
+            <option value="test" id="opt-test">Test</option>
         </select>
     </div>
 
-    <button id="slowBtn" class="slow-btn" onclick="toggleSlow()">🐢 <span id="l-slow"></span></button>
+    <button id="slowBtn" class="slow-btn" onclick="toggleSlow()">🐢 <span id="l-slow">Slow 0.8x</span></button>
 
     <div class="card">
         <label id="l-materials">MATERIALS</label>
@@ -91,7 +93,7 @@
     <div class="cover" id="cover"><span class="gold-icon">♫</span></div>
     <input type="range" id="prog" value="0" step="0.1">
     <div class="time" id="time-display">00:00 / 00:00</div>
-    <div style="display:flex; align-items:center; gap:40px; margin-bottom:30px;">
+    <div style="display:flex; align-items:center; gap:50px; margin-bottom:30px;">
         <button class="nav-btn" onclick="rewind(-10)">⏪</button>
         <button class="play-btn" id="play-btn" onclick="togglePlay()">▶</button>
         <button class="nav-btn" onclick="rewind(10)">⏩</button>
@@ -133,12 +135,13 @@
         fr: { name: "Français", lang: "LANGUE", mode: "MODE", slow: "LENT 0.8x", materials: "MATÉRIELS", al: "AUDIO", il: "IMAGE", study: "Étude", master: "Maître", test: "Test", link: "Lien", dict: "URL dictionnaire", select: "📁 Choisir" },
         de: { name: "Deutsch", lang: "SPRACHE", mode: "MODUS", slow: "LANGSAM 0.8x", materials: "MATERIALIEN", al: "AUDIO", il: "BILD", study: "Lernen", master: "Master", test: "Test", link: "Link", dict: "Wörterbuch URL", select: "📁 Datei wählen" },
         es: { name: "Español", lang: "IDIOMA", mode: "MODO", slow: "LENTO 0.8x", materials: "MATERIALES", al: "AUDIO", il: "IMAGEN", study: "Estudio", master: "Maestro", test: "Prueba", link: "Enlace", dict: "URL diccionario", select: "📁 Seleccionar" },
-        pt: { name: "Português", lang: "LÍNGUA", mode: "MODO", slow: "LENTO 0.8x", materials: "MATERIAIS", al: "ÁUDIO", il: "IMAGEM", study: "Estudo", master: "Mestre", test: "Teste", link: "Link", dict: "URL dicionário", select: "📁 Escolher" },
         it: { name: "Italiano", lang: "LINGUA", mode: "MODALITÀ", slow: "LENTO 0.8x", materials: "MATERIALI", al: "AUDIO", il: "IMMAGINE", study: "Studio", master: "Master", test: "Test", link: "Link", dict: "URL dizionario", select: "📁 Scegli file" },
+        pt: { name: "Português", lang: "LÍNGUA", mode: "MODO", slow: "LENTO 0.8x", materials: "MATERIAIS", al: "ÁUDIO", il: "IMAGEM", study: "Estudo", master: "Mestre", test: "Teste", link: "Link", dict: "URL dicionário", select: "📁 Escolher" },
         ar: { name: "العربية", lang: "اللغة", mode: "الوضع", slow: "بطيء 0.8x", materials: "المواد", al: "صوت", il: "صورة", study: "دراسة", master: "خبير", test: "اختبار", link: "رابط", dict: "قاموس", select: "📁 اختر الملف" },
         fa: { name: "فارسی", lang: "زبان", mode: "حالت", slow: "آهسته 0.8x", materials: "منابع", al: "صدا", il: "تصویر", study: "آموزش", master: "استاد", test: "آزمون", link: "لینک", dict: "دیکشنری", select: "📁 انتخاب فایل" },
-        hi: { name: "हिन्दी", lang: "भाषा", mode: "मोд", slow: "धीमा 0.8x", materials: "सामग्री", al: "ऑडियो", il: "चित्र", study: "अध्ययन", master: "मास्टर", test: "परीक्षा", link: "लिंक", dict: "URL", select: "📁 फ़ाइल चुनें" },
-        zh: { name: "中文", lang: "语言", mode: "模式", slow: "慢放 0.8x", materials: "材料", al: "音频", il: "图片", study: "学习", master: "精通", test: "测试", link: "链接", dict: "字典", select: "📁 选择文件" }
+        hi: { name: "हिन्दी", lang: "भाषा", mode: "मोड", slow: "धीमा 0.8x", materials: "सामग्री", al: "ऑडियो", il: "चित्र", study: "अध्ययन", master: "मास्टर", test: "परीक्षा", link: "लिंक", dict: "URL", select: "📁 फ़ाइल चुनें" },
+        zh: { name: "中文", lang: "语言", mode: "模式", slow: "慢放 0.8x", materials: "材料", al: "音频", il: "图片", study: "学习", master: "精通", test: "测试", link: "链接", dict: "字典", select: "📁 选择文件" },
+        ja: { name: "日本語", lang: "言語", mode: "モード", slow: "スロー 0.8x", materials: "教材", al: "オーディオ", il: "画像", study: "学習", master: "マスター", test: "テスト", link: "リンク", dict: "辞書URL", select: "📁 ファイル選択" }
     };
 
     const sel = document.getElementById('langSelect');
@@ -180,7 +183,7 @@
     function closePanel() { p.style.transition = 'width 0.4s ease'; p.style.width = '0px'; p.style.borderLeft = '0px'; }
 
     function togglePlay() { audio.paused ? audio.play() : audio.pause(); }
-    function rewind(v) { audio.currentTime += v; }
+    function rewind(v) { if(document.getElementById('modeSelect').value !== 'test') audio.currentTime += v; }
     function toggleSlow() { audio.playbackRate = audio.playbackRate === 1 ? 0.8 : 1; document.getElementById('slowBtn').classList.toggle('active', audio.playbackRate === 0.8); }
     function setI(u) { const c = document.getElementById('cover'); c.style.backgroundImage = u ? `url(${u})` : 'none'; c.innerHTML = u ? '' : '<span class="gold-icon">♫</span>'; }
     function loadD(u) { if(u) { document.getElementById('frame').src = u; openPanel(600); } }
