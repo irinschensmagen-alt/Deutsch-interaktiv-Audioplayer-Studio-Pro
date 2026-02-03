@@ -3,100 +3,118 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Deutsch interaktiv – Audio Studio</title>
+<title>Audio Studio Pro</title>
 
 <style>
-:root{
-  --bg:#f2f5fb;
-  --panel:#ffffff;
-  --accent:#8faadc;
-  --accent2:#dbe4f5;
-  --text:#2c2c2c;
-  --radius:16px;
-  --shadow:0 10px 28px rgba(0,0,0,.1);
-  font-family:"Segoe UI",system-ui,sans-serif;
+:root {
+  --bg1: #e6e9f0;
+  --bg2: #eef1f5;
+  --accent: #8faadc;
+  --text: #2c2c2c;
+  --panel: rgba(255,255,255,0.85);
+  --radius: 14px;
+  --shadow: 0 10px 30px rgba(0,0,0,0.08);
+  font-family: "Segoe UI", system-ui, sans-serif;
 }
 
-body{
-  margin:0;
-  min-height:100vh;
-  background:linear-gradient(120deg,#e9edf7,#f6f8fc);
-  display:flex;
-  align-items:center;
-  justify-content:center;
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(120deg, var(--bg1), var(--bg2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.player{
-  width:360px;
-  background:var(--panel);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  padding:16px;
+@keyframes chameleon {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
 }
 
-.header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+.player {
+  width: 360px;
+  background: var(--panel);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+  animation: chameleon 40s linear infinite;
 }
 
-.header h2{
-  margin:0;
-  font-size:16px;
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-audio{
-  width:100%;
-  margin-top:10px;
+.header h2 {
+  font-size: 16px;
+  margin: 0;
 }
 
-.time{
-  display:flex;
-  justify-content:space-between;
-  font-size:12px;
-  margin-top:4px;
+.controls-row {
+  margin-top: 12px;
 }
 
-.buttons{
-  display:flex;
-  gap:8px;
-  margin-top:12px;
-  flex-wrap:wrap;
+audio {
+  width: 100%;
 }
 
-button{
-  flex:1;
-  padding:6px;
-  border:none;
-  border-radius:8px;
-  background:var(--accent);
-  color:white;
-  font-size:12px;
-  cursor:pointer;
+.time {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-top: 4px;
 }
 
-button.secondary{
-  background:var(--accent2);
-  color:var(--text);
+.buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
 }
 
-button.recording{
-  background:#e07a7a;
+button {
+  flex: 1;
+  padding: 6px;
+  border-radius: 8px;
+  border: none;
+  background: var(--accent);
+  color: white;
+  cursor: pointer;
+  font-size: 12px;
 }
 
-.playlist{
-  margin-top:12px;
-  font-size:13px;
+button.secondary {
+  background: #c7d3ea;
+  color: #2c2c2c;
 }
 
-.playlist div{
-  padding:4px;
-  cursor:pointer;
-  border-radius:6px;
+select, input[type="color"] {
+  width: 100%;
+  margin-top: 8px;
 }
 
-.playlist div:hover{
-  background:#eef2fa;
+.playlist {
+  margin-top: 12px;
+  font-size: 13px;
+}
+
+.playlist div {
+  cursor: pointer;
+  padding: 4px;
+}
+
+.playlist div:hover {
+  background: rgba(0,0,0,0.05);
+}
+
+.cover {
+  width: 100%;
+  height: 160px;
+  border-radius: 10px;
+  background-size: cover;
+  background-position: center;
+  margin-top: 10px;
 }
 </style>
 </head>
@@ -105,21 +123,36 @@ button.recording{
 
 <div class="player">
   <div class="header">
-    <h2>Deutsch interaktiv</h2>
+    <h2 id="title">Audio Studio Pro</h2>
+    <select id="lang">
+      <option value="ru">Русский</option>
+      <option value="en">English</option>
+      <option value="de">Deutsch</option>
+      <option value="fr">Français</option>
+      <option value="es">Español</option>
+      <option value="it">Italiano</option>
+      <option value="zh">中文</option>
+      <option value="ar">العربية</option>
+      <option value="hi">हिन्दी</option>
+    </select>
   </div>
 
-  <audio id="audio" controls></audio>
+  <div class="cover" id="cover"></div>
+  <input type="file" accept="image/*" id="coverUpload">
 
-  <div class="time">
-    <span id="current">0:00</span>
-    <span id="duration">0:00</span>
+  <div class="controls-row">
+    <audio id="audio" controls></audio>
+    <div class="time">
+      <span id="current">0:00</span>
+      <span id="duration">0:00</span>
+    </div>
   </div>
 
   <div class="buttons">
-    <input type="file" id="audioUpload" accept="audio/*" hidden>
+    <input type="file" accept="audio/*" id="audioUpload" hidden>
     <button onclick="audioUpload.click()">Загрузить аудио</button>
     <button onclick="downloadAudio()" class="secondary">Скачать</button>
-    <button onclick="toggleRecord()" class="secondary" id="recBtn">🎤 Записать</button>
+    <button onclick="toggleRecord()" class="secondary" id="recBtn">🎤 Запись</button>
   </div>
 
   <div class="playlist" id="playlist"></div>
@@ -131,31 +164,84 @@ const audioUpload = document.getElementById("audioUpload");
 const playlist = document.getElementById("playlist");
 const current = document.getElementById("current");
 const duration = document.getElementById("duration");
-const recBtn = document.getElementById("recBtn");
+const cover = document.getElementById("cover");
 
 let tracks = [];
-let currentAudioURL = null;
-let mediaRecorder = null;
+let mediaRecorder;
 let recordedChunks = [];
 
-/* === ЗАГРУЗКА АУДИО === */
 audioUpload.onchange = e => {
   const file = e.target.files[0];
-  if(!file) return;
-
+  if (!file) return;
   const url = URL.createObjectURL(file);
-  currentAudioURL = url;
-
-  tracks.push({name:file.name,url});
+  tracks.push({ name: file.name, url });
   renderPlaylist();
-
   audio.src = url;
-  audio.load();
+  audio.play();
 };
 
-/* === ПЛЕЙЛИСТ === */
-function renderPlaylist(){
+function renderPlaylist() {
   playlist.innerHTML = "";
-  tracks.forEach(track=>{
+  tracks.forEach(t => {
     const div = document.createElement("div");
-    div.t
+    div.textContent = t.name;
+    div.onclick = () => {
+      audio.src = t.url;
+      audio.play();
+    };
+    playlist.appendChild(div);
+  });
+}
+
+audio.ontimeupdate = () => {
+  current.textContent = format(audio.currentTime);
+  duration.textContent = format(audio.duration);
+};
+
+function format(t) {
+  if (!t) return "0:00";
+  const m = Math.floor(t / 60);
+  const s = Math.floor(t % 60).toString().padStart(2,"0");
+  return `${m}:${s}`;
+}
+
+function downloadAudio() {
+  if (!audio.src) return;
+  const a = document.createElement("a");
+  a.href = audio.src;
+  a.download = "audio.mp3";
+  a.click();
+}
+
+// 🎤 Запись голоса (ИСПРАВЛЕНО)
+async function toggleRecord() {
+  if (!mediaRecorder || mediaRecorder.state === "inactive") {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    mediaRecorder = new MediaRecorder(stream);
+    recordedChunks = [];
+    mediaRecorder.ondataavailable = e => recordedChunks.push(e.data);
+    mediaRecorder.onstop = () => {
+      const blob = new Blob(recordedChunks, { type: "audio/webm" });
+      const url = URL.createObjectURL(blob);
+      tracks.push({ name: "Voice recording", url });
+      renderPlaylist();
+      audio.src = url;
+      audio.play();
+    };
+    mediaRecorder.start();
+    recBtn.textContent = "⏹ Стоп";
+  } else {
+    mediaRecorder.stop();
+    recBtn.textContent = "🎤 Запись";
+  }
+}
+
+document.getElementById("coverUpload").onchange = e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  cover.style.backgroundImage = `url(${URL.createObjectURL(file)})`;
+};
+</script>
+
+</body>
+</html>
