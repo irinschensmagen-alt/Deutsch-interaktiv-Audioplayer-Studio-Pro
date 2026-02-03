@@ -2,11 +2,10 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Audio Studio Pro</title>
+    <title>Audio Studio Pro: Global Master</title>
     <style>
         :root { 
             --gold: linear-gradient(135deg, #d4af37 0%, #f1c40f 50%, #b8860b 100%);
-            --silver: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
             --pastel: #fdfaf2;
         }
 
@@ -14,114 +13,107 @@
 
         /* САЙДБАР */
         .sidebar { width: 320px; background: white; padding: 25px; border-right: 2px solid #f1c40f; overflow-y: auto; flex-shrink: 0; }
-        .logo-box { text-align: center; margin-bottom: 25px; }
+        .logo-box { text-align: center; margin-bottom: 25px; cursor: pointer; transition: 0.3s; }
         .logo-img { width: 100px; height: 100px; border-radius: 50%; border: 4px solid #d4af37; box-shadow: 0 5px 15px rgba(212,175,55,0.4); }
 
-        /* ЦЕНТРАЛЬНЫЙ ПЛЕЕР (УВЕЛИЧЕН) */
-        .player-main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; min-width: 600px; }
+        /* ПЛЕЕР */
+        .player-main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; min-width: 450px; }
         .cover-art { 
             width: 550px; height: 320px; border-radius: 30px; 
-            background: white; border: 10px solid white; 
-            box-shadow: 0 20px 50px rgba(184,134,11,0.2);
+            background: white; border: 10px solid white; box-shadow: 0 20px 50px rgba(184,134,11,0.2);
             display: flex; align-items: center; justify-content: center; font-size: 5rem; color: #d4af37; margin-bottom: 25px;
             background-size: cover; background-position: center;
         }
 
-        /* КАРТОЧКИ ЗАГРУЗКИ (СОЛИДНЫЕ) */
-        .load-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; max-width: 700px; }
+        /* КАРТОЧКИ ЗАГРУЗКИ */
+        .load-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; max-width: 750px; }
         .load-card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 1px solid #eee; }
+        .input-group { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+        .clear-btn { color: #e74c3c; cursor: pointer; font-weight: bold; font-size: 1.2rem; background: none; border: none; }
         
-        .input-group { display: flex; align-items: center; gap: 8px; margin-top: 8px; position: relative; }
-        .clear-btn { color: #e74c3c; cursor: pointer; font-weight: bold; font-size: 1.2rem; transition: 0.2s; background: none; border: none; }
-        .clear-btn:hover { transform: scale(1.2); }
+        input, select { width: 100%; padding: 12px; border-radius: 12px; border: 1.5px solid #ddd; outline: none; }
+        label { font-size: 0.7rem; font-weight: 900; color: #b8860b; text-transform: uppercase; letter-spacing: 1px; }
 
-        input, select { width: 100%; padding: 12px; border-radius: 12px; border: 1.5px solid #ddd; outline: none; transition: 0.3s; }
-        input:focus { border-color: #d4af37; }
-        label { font-size: 0.75rem; font-weight: 900; color: #b8860b; text-transform: uppercase; letter-spacing: 1px; }
+        /* СЛОВАРЬ (ШТОРКА) */
+        .dictionary-panel { width: 450px; min-width: 0; background: white; border-left: 10px solid #d4af37; display: flex; flex-direction: column; position: relative; }
+        .resizer { width: 25px; cursor: col-resize; position: absolute; left: -15px; top: 0; bottom: 0; z-index: 100; }
+        iframe { width: 100%; height: 100%; border: none; }
 
-        /* СЛОВАРЬ (ПОЛНЫЙ ЭКРАН) */
-        .dictionary-panel { width: 600px; background: white; border-left: 6px solid #d4af37; display: flex; flex-direction: column; position: relative; }
-        .resizer { width: 15px; cursor: col-resize; position: absolute; left: -10px; top: 0; bottom: 0; z-index: 100; }
-        .dict-header { background: var(--gold); color: white; padding: 15px; font-weight: bold; font-size: 1rem; }
-        iframe { flex: 1; width: 100%; border: none; background: white; }
-
-        /* КНОПКИ */
-        .gold-btn { background: var(--gold); color: white; border: none; padding: 15px; border-radius: 15px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 15px; }
-        #play-btn { width: 90px; height: 90px; border-radius: 50%; background: var(--gold); color: white; font-size: 2.5rem; border: none; cursor: pointer; box-shadow: 0 8px 20px rgba(212,175,55,0.4); }
-        #prog { width: 100%; max-width: 550px; accent-color: #d4af37; height: 8px; }
+        #play-btn { width: 95px; height: 95px; border-radius: 50%; background: var(--gold); color: white; font-size: 2.8rem; border: none; cursor: pointer; }
+        #prog { width: 100%; max-width: 550px; accent-color: #d4af37; height: 10px; }
     </style>
 </head>
 <body>
 
 <div class="sidebar">
-    <div class="logo-box">
-        <img src="https://irinschensmagen-alt.github.io/Audioplayer-Studio-Pro/logo.png" class="logo-img">
-        <h2 style="color:#b8860b; margin-top:15px; font-weight:900;">AUDIO STUDIO PRO</h2>
-    </div>
+    <a href="https://t.me/DI_von_Irina" target="_blank" style="text-decoration: none;">
+        <div class="logo-box">
+            <img src="https://irinschensmagen-alt.github.io/Audioplayer-Studio-Pro/logo.png" class="logo-img">
+            <h2 style="color:#b8860b; margin-top:15px; font-weight:900;">AUDIO STUDIO PRO</h2>
+        </div>
+    </a>
 
     <label id="l-lang">ЯЗЫК / LANGUAGE</label>
     <select id="langSelect" onchange="translateUI()">
         <option value="ru">Русский</option><option value="en">English</option><option value="de">Deutsch</option>
-        <option value="es">Español</option><option value="fr">Français</option><option value="it">Italiano</option>
-        <option value="uk">Українська</option><option value="tr">Türkçe</option>
+        <option value="ja">日本語</option><option value="zh">中文</option><option value="fa">فارسی</option>
+        <option value="hi">हिन्दी</option><option value="da">دری</option><option value="ar">العربية</option>
+        <option value="pt">Português</option><option value="es">Español</option><option value="fr">Français</option><option value="it">Italiano</option>
     </select>
 
     <label id="l-mode" style="margin-top:20px; display:block;">РЕЖИМ / MODE</label>
     <select id="modeSelect">
-        <option value="study">Ученик (Study)</option>
-        <option value="master">Мастер (Loop)</option>
-        <option value="test">Тест (Exam)</option>
+        <option value="study" id="opt-study">Ученик</option>
+        <option value="master" id="opt-master">Мастер</option>
+        <option value="test" id="opt-test">Тест</option>
     </select>
 
-    <label id="l-pdf-up" style="margin-top:20px; display:block;">ЗАГРУЗИТЬ PDF</label>
+    <label id="l-pdf" style="margin-top:20px; display:block;">ЗАГРУЗИТЬ PDF</label>
     <div class="input-group">
         <input type="file" id="pdfFile" accept=".pdf">
         <button class="clear-btn" onclick="clearField('pdfFile', 'dict')">✖</button>
     </div>
 
-    <label id="l-dict-url" style="margin-top:20px; display:block;">ССЫЛКА НА СЛОВАРЬ</label>
+    <label id="l-dict" style="margin-top:20px; display:block;">ССЫЛКА НА СЛОВАРЬ</label>
     <div class="input-group">
-        <input type="text" id="dictUrl" placeholder="https://..." oninput="loadDict(this.value)">
+        <input type="text" id="dictUrl" oninput="loadDict(this.value)">
         <button class="clear-btn" onclick="clearField('dictUrl', 'dict')">✖</button>
     </div>
-
-    <button class="gold-btn" style="background:#34495e; margin-top:30px;">Copy Embed Code</button>
 </div>
 
-<div class="player-main" id="p-area">
-    <div id="status" style="color:#d4af37; font-weight:bold; letter-spacing:3px; margin-bottom:15px;">READY / ГОТОВ</div>
+<div class="player-main">
+    <div id="status" style="color:#d4af37; font-weight:bold; letter-spacing:3px; margin-bottom:15px;">ГОТОВ / READY</div>
     <div class="cover-art" id="cover">🎵</div>
     
     <input type="range" id="prog" value="0" step="0.1">
-    <div id="time" style="font-weight:900; font-size:1.5rem; margin:20px; color:#444;">00:00 / 00:00</div>
+    <div id="time" style="font-weight:900; font-size:1.8rem; margin:20px; color:#444;">00:00 / 00:00</div>
 
-    <div style="display:flex; gap:30px; align-items:center; margin-bottom:40px;">
-        <button onclick="audio.currentTime-=10" style="background:none; border:none; font-size:2rem; cursor:pointer;">⏪</button>
+    <div style="display:flex; gap:35px; align-items:center; margin-bottom:40px;">
+        <button onclick="audio.currentTime-=10" style="background:none; border:none; font-size:2.5rem; cursor:pointer;">⏪</button>
         <button id="play-btn" onclick="togglePlay()">▶</button>
-        <button onclick="audio.currentTime+=10" style="background:none; border:none; font-size:2rem; cursor:pointer;">⏩</button>
+        <button onclick="audio.currentTime+=10" style="background:none; border:none; font-size:2.5rem; cursor:pointer;">⏩</button>
     </div>
 
     <div class="load-grid">
         <div class="load-card">
-            <label id="l-a-link">ССЫЛКА НА АУДИО</label>
+            <label id="l-al">ССЫЛКА НА АУДИО</label>
             <div class="input-group">
                 <input type="text" id="aUrl" oninput="audio.src=this.value">
                 <button class="clear-btn" onclick="clearField('aUrl', 'audio')">✖</button>
             </div>
-            <label id="l-a-file" style="margin-top:15px; display:block;">ФАЙЛ АУДИО</label>
+            <label id="l-af" style="margin-top:15px; display:block;">ФАЙЛ АУДИО</label>
             <div class="input-group">
                 <input type="file" id="aFile" accept="audio/*">
                 <button class="clear-btn" onclick="clearField('aFile', 'audio')">✖</button>
             </div>
         </div>
-
         <div class="load-card">
-            <label id="l-i-link">ССЫЛКА НА ФОТО</label>
+            <label id="l-il">ССЫЛКА НА ФОТО</label>
             <div class="input-group">
                 <input type="text" id="iUrl" oninput="setImg(this.value)">
                 <button class="clear-btn" onclick="clearField('iUrl', 'img')">✖</button>
             </div>
-            <label id="l-i-file" style="margin-top:15px; display:block;">ФАЙЛ ФОТО</label>
+            <label id="l-if" style="margin-top:15px; display:block;">ФАЙЛ ФОТО</label>
             <div class="input-group">
                 <input type="file" id="iFile" accept="image/*">
                 <button class="clear-btn" onclick="clearField('iFile', 'img')">✖</button>
@@ -132,21 +124,49 @@
 
 <div class="dictionary-panel" id="dict-panel">
     <div class="resizer" id="resizer"></div>
-    <div class="dict-header">📖 DICTIONARY & MATERIALS (Drag left to resize)</div>
     <iframe id="dict-frame" src="about:blank"></iframe>
 </div>
 
 <script>
     const audio = new Audio();
-    
+    const translations = {
+        ru: { lang: "ЯЗЫК", mode: "РЕЖИМ", study: "Ученик", master: "Мастер", test: "Тест", pdf: "ЗАГРУЗИТЬ PDF", dict: "ССЫЛКА НА СЛОВАРЬ", al: "ССЫЛКА НА АУДИО", af: "ФАЙЛ АУДИО", il: "ССЫЛКА НА ФОТО", if: "ФАЙЛ ФОТО", ready: "ГОТОВ", play: "ИГРАЕТ", pause: "ПАУЗА" },
+        en: { lang: "LANGUAGE", mode: "MODE", study: "Study", master: "Master", test: "Test", pdf: "UPLOAD PDF", dict: "DICTIONARY URL", al: "AUDIO LINK", af: "AUDIO FILE", il: "IMAGE LINK", if: "IMAGE FILE", ready: "READY", play: "PLAYING", pause: "PAUSED" },
+        ja: { lang: "言語", mode: "モード", study: "学習", master: "マスター", test: "テスト", pdf: "PDFをアップロード", dict: "辞書URL", al: "オーディオリンク", af: "オーディオファイル", il: "画像リンク", if: "画像ファイル", ready: "準備完了", play: "再生中", pause: "一時停止" },
+        zh: { lang: "语言", mode: "模式", study: "学习", master: "大师", test: "测试", pdf: "上传 PDF", dict: "字典网址", al: "音频链接", af: "音频文件", il: "图片链接", if: "图片文件", ready: "准备就绪", play: "播放中", pause: "暂停" },
+        fa: { lang: "زبان", mode: "حالت", study: "مطالعه", master: "استاد", test: "تست", pdf: "بارگذاری PDF", dict: "لینک دیکشنری", al: "لینک صوتی", af: "فایل صوتی", il: "لینک تصویر", if: "فایل تصویر", ready: "آماده", play: "در حال پخش", pause: "متوقف شد" },
+        hi: { lang: "भाषा", mode: "मोड", study: "अध्ययन", master: "मास्टर", test: "परीक्षा", pdf: "PDF अपलोड करें", dict: "शब्दकोश लिंक", al: "ऑडियो लिंक", af: "ऑडियो फ़ाइल", il: "इमेज लिंक", if: "इमेज फ़ाइल", ready: "तैयार", play: "चल रहा है", pause: "रुका हुआ" },
+        ar: { lang: "اللغة", mode: "الوضع", study: "دراسة", master: "ماستر", test: "اختبار", pdf: "تحميل PDF", dict: "رابط القاموس", al: "رابط الصوت", af: "ملف الصوت", il: "رابط الصورة", if: "ملف الصورة", ready: "جاهز", play: "جاري التشغيل", pause: "متوقف" },
+        pt: { lang: "IDIOMA", mode: "MODO", study: "Estudo", master: "Mestre", test: "Teste", pdf: "CARREGAR PDF", dict: "URL DO DICIONÁRIO", al: "LINK DE ÁUDIO", af: "ARQUIVO DE ÁUDIO", il: "LINK DE IMAGEM", if: "ARQUIVO DE IMAGEM", ready: "PRONTO", play: "TOCANDO", pause: "PAUSADO" }
+    };
+
+    function translateUI() {
+        const lang = document.getElementById('langSelect').value;
+        const t = translations[lang] || translations.en;
+        document.getElementById('l-lang').innerText = t.lang;
+        document.getElementById('l-mode').innerText = t.mode;
+        document.getElementById('opt-study').innerText = t.study;
+        document.getElementById('opt-master').innerText = t.master;
+        document.getElementById('opt-test').innerText = t.test;
+        document.getElementById('l-pdf').innerText = t.pdf;
+        document.getElementById('l-dict').innerText = t.dict;
+        document.getElementById('l-al').innerText = t.al;
+        document.getElementById('l-af').innerText = t.af;
+        document.getElementById('l-il').innerText = t.il;
+        document.getElementById('l-if').innerText = t.if;
+        if(audio.paused) document.getElementById('status').innerText = t.ready;
+    }
+
+    function togglePlay() { 
+        const t = translations[document.getElementById('langSelect').value] || translations.en;
+        if(audio.paused) { audio.play(); document.getElementById('status').innerText = t.play; document.getElementById('play-btn').innerText = '⏸'; }
+        else { audio.pause(); document.getElementById('status').innerText = t.pause; document.getElementById('play-btn').innerText = '▶'; }
+    }
+
     function setImg(url) { 
         const c = document.getElementById('cover');
         c.style.backgroundImage = url ? `url(${url})` : 'none';
         c.innerText = url ? '' : '🎵';
-    }
-
-    function loadDict(url) { 
-        if(url.trim() !== '') document.getElementById('dict-frame').src = url; 
     }
 
     function clearField(id, type) {
@@ -156,26 +176,25 @@
         if(type === 'dict') document.getElementById('dict-frame').src = 'about:blank';
     }
 
-    // Загрузка файлов
+    function loadDict(url) { if(url.trim()) document.getElementById('dict-frame').src = url; }
+
     document.getElementById('aFile').onchange = (e) => { if(e.target.files[0]) audio.src = URL.createObjectURL(e.target.files[0]); };
     document.getElementById('iFile').onchange = (e) => { if(e.target.files[0]) setImg(URL.createObjectURL(e.target.files[0])); };
     document.getElementById('pdfFile').onchange = (e) => { if(e.target.files[0]) document.getElementById('dict-frame').src = URL.createObjectURL(e.target.files[0]) + "#view=FitH"; };
 
-    function togglePlay() { audio.paused ? audio.play() : audio.pause(); }
-    audio.onplay = () => { document.getElementById('play-btn').innerText = '⏸'; document.getElementById('status').innerText = 'PLAYING / ИГРАЕТ'; };
-    audio.onpause = () => { document.getElementById('play-btn').innerText = '▶'; document.getElementById('status').innerText = 'PAUSED / ПАУЗА'; };
-
-    // Ресайзер словаря
+    // РЕЗОЙЗЕР (ШТОРКА)
     const panel = document.getElementById('dict-panel');
     const resizer = document.getElementById('resizer');
-    resizer.addEventListener('mousedown', (e) => {
-        document.addEventListener('mousemove', resize);
-        document.addEventListener('mouseup', () => document.removeEventListener('mousemove', resize));
+    let isResizing = false;
+
+    resizer.addEventListener('mousedown', () => isResizing = true);
+    document.addEventListener('mouseup', () => isResizing = false);
+    document.addEventListener('mousemove', (e) => {
+        if (!isResizing) return;
+        let w = window.innerWidth - e.clientX;
+        if (w > 10 && w < window.innerWidth * 0.85) panel.style.width = w + 'px';
+        if (w < 20) panel.style.width = '0px';
     });
-    function resize(e) {
-        const w = window.innerWidth - e.pageX;
-        if(w > 350 && w < window.innerWidth * 0.8) panel.style.width = w + 'px';
-    }
 
     audio.ontimeupdate = () => {
         const p = document.getElementById('prog'); p.max = audio.duration || 0; p.value = audio.currentTime;
@@ -183,21 +202,7 @@
         document.getElementById('time').innerText = `${f(audio.currentTime)} / ${f(audio.duration || 0)}`;
     };
 
-    function translateUI() {
-        const l = document.getElementById('langSelect').value;
-        const d = {
-            ru: { al: "ССЫЛКА НА АУДИО", af: "ФАЙЛ АУДИО", il: "ССЫЛКА НА ФОТО", if: "ФАЙЛ ФОТО", mode: "РЕЖИМ", pdf: "ЗАГРУЗИТЬ PDF", dict: "ССЫЛКА НА СЛОВАРЬ" },
-            en: { al: "AUDIO LINK", af: "AUDIO FILE", il: "IMAGE LINK", if: "IMAGE FILE", mode: "MODE", pdf: "UPLOAD PDF", dict: "DICTIONARY URL" }
-        };
-        const t = d[l] || d.en;
-        document.getElementById('l-a-link').innerText = t.al;
-        document.getElementById('l-a-file').innerText = t.af;
-        document.getElementById('l-i-link').innerText = t.il;
-        document.getElementById('l-i-file').innerText = t.if;
-        document.getElementById('l-mode').innerText = t.mode;
-        document.getElementById('l-pdf-up').innerText = t.pdf;
-        document.getElementById('l-dict-url').innerText = t.dict;
-    }
+    translateUI();
 </script>
 </body>
 </html>
