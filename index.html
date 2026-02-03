@@ -10,6 +10,7 @@
             --gold-text: #b8860b;
             --bg: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
             --danger: #e74c3c;
+            --success: #27ae60;
         }
         body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--bg); color: #444; display: flex; height: 100vh; overflow: hidden; }
         .container { display: grid; grid-template-columns: 350px 1fr; width: 100%; }
@@ -26,9 +27,10 @@
         .btn-del:hover { background: var(--danger); color: white; }
         .controls { display: flex; gap: 20px; align-items: center; margin: 30px 0; }
         .c-btn { width: 50px; height: 50px; border-radius: 15px; border: none; background: #fff; color: #d4af37; font-size: 1.3rem; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        #play { width: 75px; height: 75px; border-radius: 50%; background: var(--gold); color: white; font-size: 1.8rem; }
+        #play-btn { width: 75px; height: 75px; border-radius: 50%; background: var(--gold); color: white; font-size: 1.8rem; }
         #prog { width: 100%; max-width: 550px; accent-color: #d4af37; cursor: pointer; }
         #time-txt { font-family: monospace; font-weight: bold; color: var(--gold-text); margin-top: 8px; font-size: 1.1rem; }
+        #status-display { color: var(--gold-text); font-weight: 900; margin-bottom: 12px; font-size: 1.2rem; min-height: 1.5em; }
         #lock-screen { position: absolute; inset: 0; background: rgba(255,255,255,0.98); z-index: 5000; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
         .input-group { background: #fdfdfd; padding: 15px; border-radius: 15px; border: 1px solid #eee; margin-top: 10px; }
     </style>
@@ -43,7 +45,7 @@
 <div class="container">
     <div class="settings">
         <div class="header">
-            <img id="main-logo" src="" class="logo-img" alt="Logo">
+            <img id="main-logo" src="https://irinschensmagen-alt.github.io/Audioplayer-Studio-Pro/logo.png" class="logo-img" alt="Logo">
             <h3 id="ui-title">Audio Editor</h3>
         </div>
 
@@ -63,20 +65,20 @@
         <label id="lbl-mode">🎓 Mode / 模式</label>
         <select id="modeSelect">
             <option value="master">Master</option>
-            <option value="study">Study</option>
+            <option value="study" selected>Study (Beginner Help)</option>
             <option value="test">Test</option>
         </select>
 
-        <button class="btn" id="slowBtn" style="background:#27ae60; display:none">🐢 Slow 0.8x</button>
+        <button class="btn" id="slowBtn" style="background: var(--success);">🐢 SLOW MOTION 0.8x</button>
         <button class="btn" id="loopBtn" style="background:#2980b9; display:none">🔄 Loop: Off</button>
 
-        <label id="lbl-code" style="margin-top:20px">📦 Iframe Code</label>
+        <label id="lbl-code" style="margin-top:20px">📦 Embed Code</label>
         <textarea id="code-out" readonly></textarea>
         <button class="btn" id="copy-btn">Copy Code</button>
     </div>
 
     <div class="player-view">
-        <div id="status-display" style="color:#d4af37; font-weight: 900; margin-bottom: 12px; font-size: 1.2rem;"></div>
+        <div id="status-display"></div>
         <div class="cover" id="cover-div"></div>
         <input type="range" id="prog" value="0" step="0.1">
         <div id="time-txt">00:00 / 00:00</div>
@@ -87,14 +89,14 @@
         </div>
         <div style="width:100%; max-width:550px;">
             <div class="input-group">
-                <label id="lbl-aud">Audio</label>
-                <input type="text" id="audUrl" placeholder="URL...">
+                <label id="lbl-aud">Audio (URL or File)</label>
+                <input type="text" id="audUrl" placeholder="Paste URL...">
                 <input type="file" id="audFile" accept="audio/*">
                 <button class="btn-del" onclick="clearRes('aud')" id="del-aud">✖ Remove</button>
             </div>
             <div class="input-group">
-                <label id="lbl-img">Cover</label>
-                <input type="text" id="imgUrl" placeholder="URL...">
+                <label id="lbl-img">Cover (URL or File)</label>
+                <input type="text" id="imgUrl" placeholder="Paste URL...">
                 <input type="file" id="imgFile" accept="image/*">
                 <button class="btn-del" onclick="clearRes('img')" id="del-img">✖ Remove</button>
             </div>
@@ -103,17 +105,12 @@
 </div>
 
 <script>
-    // Я вставил прямой путь к вашему логотипу в репозитории
-    const MY_AUTH_LOGO = "logo.png"; 
+    const MY_AUTH_LOGO = "https://irinschensmagen-alt.github.io/Audioplayer-Studio-Pro/logo.png";
     document.getElementById('main-logo').src = MY_AUTH_LOGO;
 
     const audio = new Audio();
     let plays = 0;
 
     const langMap = {
-        ru: { title: "Аудио Редактор", lang: "Язык интерфейса", mode: "Режим работы", code: "Код для вставки", copy: "Скопировать код", aud: "Аудио", img: "Обложка", del: "✖ Удалить", slow: "🐢 Замедление 0.8x", lock: "Время вышло", attempt: "Попытка", modes: ["Учитель (Master)", "Ученик (Study)", "Экзамен (Test)"] },
-        de: { title: "Audio Editor", lang: "Sprache", mode: "Modus", code: "Einbettungscode", copy: "Code kopieren", aud: "Audio", img: "Cover", del: "✖ Löschen", slow: "🐢 Zeitlupe 0.8x", lock: "Zeit um", attempt: "Versuch", modes: ["Lehrer (Master)", "Schüler (Study)", "Prüfung (Test)"] },
-        en: { title: "Audio Editor", lang: "Language", mode: "Mode", code: "Embed Code", copy: "Copy Code", aud: "Audio", img: "Cover", del: "✖ Remove", slow: "🐢 Slow 0.8x", lock: "Time is up", attempt: "Attempt", modes: ["Master", "Study", "Test"] },
-        zh: { title: "音频编辑器", lang: "界面语言", mode: "工作模式", code: "嵌入代码", copy: "复制代码", aud: "音频", img: "封面", del: "✖ 移除", slow: "🐢 0.8倍速", lock: "时间到", attempt: "尝试", modes: ["教师模式", "学生模式", "测试模式"] },
-        fr: { title: "Éditeur Audio", lang: "Langue", mode: "Mode", code: "Code d'intégration", copy: "Copier le code", aud: "Audio", img: "Couverture", del: "✖ Supprimer", slow: "🐢 Ralenti 0.8x", lock: "Temps écoulé", attempt: "Tentative", modes: ["Maître", "Étude", "Test"] },
-        es: { title: "Editor de Audio", lang: "Idioma", mode: "Modo", code: "Código de inserción", copy: "Copiar código", aud: "Audio", img: "Portada",
+        ru: { title: "Аудио Редактор", lang: "Язык интерфейса", mode: "Режим работы", code: "Код для вставки", copy: "Скопировать код", aud: "Аудио", img: "Обложка", del: "✖ Удалить", slow: "🐢 ЗАМЕДЛЕНИЕ 0.8x", lock: "Время вышло", attempt: "Попытка", modes: ["Мастер", "Ученик (Помощь)", "Тест (Экзамен)"] },
+        de: { title: "Audio Editor", lang: "Sprache", mode: "Modus", code: "Einbettungscode", copy: "Code kopieren", aud: "Audio", img: "Cover", del: "✖ Löschen", slow: "🐢 SLOW MOTION 0.8x", lock: "Zeit um", attempt: "Versuch",
