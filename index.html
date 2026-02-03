@@ -5,90 +5,109 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Deutsch interaktiv PRO</title>
     <style>
-        :root { --primary: #6c5ce7; --glass: rgba(255, 255, 255, 0.95); }
-        body.chameleon { background: linear-gradient(-45deg, #0f2027, #203a43, #2c5364, #00d2ff); background-size: 400% 400%; animation: move 15s ease infinite; }
-        @keyframes move { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; min-height: 100vh; display: flex; justify-content: center; align-items: center; transition: 0.5s; overflow-x: hidden; }
+        :root { --primary: #6c5ce7; --bg-grad: linear-gradient(-45deg, #0f2027, #203a43, #2c5364); }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; min-height: 100vh; display: flex; justify-content: center; align-items: center; background: var(--bg-grad); color: #2d3436; }
         .container { display: grid; grid-template-columns: 380px 520px; gap: 20px; width: 95%; max-width: 1000px; position: relative; }
-        .panel { background: var(--glass); backdrop-filter: blur(15px); padding: 25px; border-radius: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.3); }
+        .panel { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); padding: 25px; border-radius: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.3); }
+        
+        /* Заголовок и лого */
         .header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 10px; }
         .logo { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--primary); background: white; object-fit: contain; }
-        label { display: block; font-size: 0.7rem; font-weight: bold; margin: 12px 0 5px; text-transform: uppercase; color: #444; }
-        select, input, textarea { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 5px; box-sizing: border-box; font-size: 0.9rem; }
-        .btn { width: 100%; min-height: 45px; padding: 10px; border: none; border-radius: 12px; background: var(--primary); color: white; cursor: pointer; font-weight: bold; margin-top: 10px; display: flex; align-items: center; justify-content: center; text-align: center; white-space: normal; transition: 0.3s; }
-        .btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
-        .cover-art { width: 100%; height: 260px; border-radius: 20px; background: #eee center/cover no-repeat; border: 5px solid #fff; box-shadow: 0 10px 20px rgba(0,0,0,0.1); margin-bottom: 15px; transition: 0.5s; }
-        .controls { display: flex; justify-content: center; gap: 15px; margin: 15px 0; }
-        .c-btn { width: 55px; height: 55px; border-radius: 15px; border: none; background: var(--primary); color: white; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .c-btn:disabled { background: #ccc; opacity: 0.5; cursor: not-allowed; }
-        #timer-box { font-size: 1.8rem; font-weight: bold; color: #e74c3c; text-align: center; margin-bottom: 10px; display: none; font-family: monospace; }
-        #lock-screen { position: absolute; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000; border-radius: 30px; display: none; flex-direction: column; justify-content: center; align-items: center; color: white; text-align: center; padding: 20px; }
+
+        /* Обложка с иконкой */
+        .cover-art { 
+            width: 100%; height: 280px; border-radius: 20px; 
+            background: #dfe6e9; border: 4px solid #fff; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            background-size: cover; background-position: center; position: relative; overflow: hidden;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.05);
+        }
+        .cover-art::before { content: "🎵"; font-size: 80px; opacity: 0.3; }
+        .cover-art.has-img::before { display: none; }
+        .cover-hint { font-size: 0.8rem; font-weight: bold; color: #636e72; margin-top: 10px; }
+
+        label { display: block; font-size: 0.7rem; font-weight: bold; margin: 12px 0 5px; text-transform: uppercase; color: #636e72; }
+        select, input, textarea { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd; margin-bottom: 8px; box-sizing: border-box; }
+
+        /* Кнопки */
+        .btn { width: 100%; min-height: 50px; border: none; border-radius: 15px; background: var(--primary); color: white; cursor: pointer; font-weight: bold; transition: 0.3s; margin-top: 10px; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(108, 92, 231, 0.4); }
+
+        .controls { display: flex; justify-content: center; gap: 20px; margin: 20px 0; }
+        .c-btn { width: 60px; height: 60px; border-radius: 20px; border: none; background: var(--primary); color: white; font-size: 1.4rem; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        #play { width: 80px; height: 80px; border-radius: 50%; font-size: 2rem; }
+
+        #timer-box { font-size: 2.2rem; font-weight: bold; color: #e74c3c; text-align: center; margin: 10px 0; display: none; font-family: monospace; }
+        #lock-screen { position: absolute; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000; border-radius: 30px; display: none; flex-direction: column; justify-content: center; align-items: center; color: white; }
     </style>
 </head>
-<body class="chameleon">
+<body>
 
-<div id="lock-screen"><h1 id="lock-msg">Time is up</h1><button class="btn" onclick="location.reload()" style="width:180px; background: #e74c3c;">Restart</button></div>
+<div id="lock-screen"><h1 id="lock-msg">Time is up</h1><button class="btn" onclick="location.reload()" style="width:180px; background:#e74c3c">Restart</button></div>
 
 <div class="container">
     <div class="panel">
         <div class="header">
             <img src="logo.png" class="logo" alt="Logo" onerror="this.src='https://via.placeholder.com/60?text=DI'">
-            <h3 style="margin:0">Deutsch interaktiv</h3>
+            <h3 style="margin:0">Audio Studio</h3>
         </div>
         <label id="lbl-lang">🌐 Язык / Sprache</label>
         <select id="langSet">
-            <option value="de">Deutsch</option>
             <option value="ru">Русский</option>
+            <option value="de">Deutsch</option>
             <option value="en">English</option>
         </select>
         <label id="lbl-mode">🎓 Режим / Modus</label>
         <select id="modeSet">
-            <option value="master">Master (Loop available)</option>
-            <option value="study">Study (0.8x Slow)</option>
-            <option value="test">Test (2 min Timer)</option>
+            <option value="master">Master Mode (Loop)</option>
+            <option value="study">Study Mode (0.8x Slow)</option>
+            <option value="test">Test Mode (2 min)</option>
         </select>
-        <div id="tools">
-            <button class="btn" id="slowBtn" style="background:#00b894; display:none">🐢 Slow Motion 0.8x</button>
-            <button class="btn" id="loopBtn" style="background:#0984e3; display:none">🔄 Loop: Off</button>
-        </div>
-        <label id="lbl-code" style="margin-top:20px">📦 Код Iframe</label>
-        <textarea id="ifOut" readonly style="height:45px; font-size:0.7rem"></textarea>
+        <button class="btn" id="slowBtn" style="background:#00b894; display:none">🐢 Замедлить 0.8x</button>
+        <button class="btn" id="loopBtn" style="background:#0984e3; display:none">🔄 Повтор: Выкл</button>
+        
+        <label id="lbl-code" style="margin-top:20px">📦 Код для Genially</label>
+        <textarea id="ifOut" readonly placeholder="Нажмите 'Скопировать'"></textarea>
         <button class="btn" id="copyBtn">Скопировать код</button>
     </div>
 
     <div class="panel">
-        <div id="cur-mode-tag" style="font-weight:bold; color:var(--primary); font-size:0.7rem; margin-bottom:5px; text-transform:uppercase;">MASTER MODE</div>
-        <div class="cover-art" id="cover"></div>
+        <div id="cur-mode-tag" style="font-weight:bold; color:var(--primary); font-size:0.8rem; margin-bottom:10px;">MASTER MODE</div>
+        
+        <div class="cover-art" id="cover">
+            <div class="cover-hint" id="hint-text">Загрузите обложку</div>
+        </div>
+
         <div id="timer-box">02:00</div>
-        <input type="range" id="prog" value="0" step="0.1" style="width:100%">
-        <div style="text-align:center; font-family:monospace; margin-top:5px; font-weight:bold;" id="time-txt">00:00 / 00:00</div>
+        <input type="range" id="prog" value="0" step="0.1" style="width:100%; accent-color: var(--primary);">
+        <div id="time-txt" style="text-align:center; font-weight:bold; margin-top:10px; font-family: monospace;">00:00 / 00:00</div>
+        
         <div class="controls">
             <button class="c-btn" id="rew">⏪</button>
-            <button class="c-btn" id="play" style="width:75px; height:75px; border-radius:50%">▶</button>
+            <button class="c-btn" id="play">▶</button>
             <button class="c-btn" id="fwd">⏩</button>
         </div>
-        <label id="lbl-audio">📁 Аудио файл</label>
-        <input type="file" id="audIn" accept="audio/*">
         
-        <label id="lbl-img">🖼️ Обложка плеера</label>
+        <label id="lbl-audio">📁 Выберите аудио файл</label>
+        <input type="file" id="audIn" accept="audio/*">
+        <label id="lbl-img">🖼️ Выберите картинку обложки</label>
         <input type="file" id="imgIn" accept="image/*">
     </div>
 </div>
 
 <script>
     const audio = new Audio();
-    audio.preservesPitch = true; // Чтобы голос не менялся при замедлении
+    audio.preservesPitch = true;
     let playCount = 0, timer;
 
     const dict = {
-        de: { lang: "🌐 Sprache", mode: "🎓 Modus", code: "📦 Iframe-Code", audio: "📁 Audio laden", img: "🖼️ Cover laden", copy: "Kopieren", lock: "Zeit um!", slow: "🐢 Langsam 0.8x" },
-        ru: { lang: "🌐 Язык", mode: "🎓 Режим", code: "📦 Код Iframe", audio: "📁 Загрузить аудио", img: "🖼️ Загрузить обложку", copy: "Скопировать код", lock: "Время вышло!", slow: "🐢 Замедлить 0.8x" },
-        en: { lang: "🌐 Language", mode: "🎓 Mode", code: "📦 Iframe Code", audio: "📁 Load Audio", img: "🖼️ Load Cover", copy: "Copy Code", lock: "Time is up!", slow: "🐢 Slow 0.8x" }
+        ru: { lang: "🌐 Язык", mode: "🎓 Режим", code: "📦 Код для Genially", audio: "📁 Выберите аудио", img: "🖼️ Выберите обложку", copy: "Скопировать код", lock: "Время вышло!", slow: "🐢 Замедлить 0.8x", hint: "Загрузите обложку" },
+        de: { lang: "🌐 Sprache", mode: "🎓 Modus", code: "📦 Genially Code", audio: "📁 Audio wählen", img: "🖼️ Cover wählen", copy: "Code kopieren", lock: "Zeit um!", slow: "🐢 Langsam 0.8x", hint: "Cover laden" },
+        en: { lang: "🌐 Language", mode: "🎓 Mode", code: "📦 Genially Code", audio: "📁 Choose Audio", img: "🖼️ Choose Cover", copy: "Copy Code", lock: "Time is up!", slow: "🐢 Slow 0.8x", hint: "Upload Cover" }
     };
 
     function updateUI() {
-        const l = document.getElementById('langSet').value;
-        const d = dict[l] || dict['en'];
+        const d = dict[document.getElementById('langSet').value];
         document.getElementById('lbl-lang').innerText = d.lang;
         document.getElementById('lbl-mode').innerText = d.mode;
         document.getElementById('lbl-code').innerText = d.code;
@@ -97,19 +116,18 @@
         document.getElementById('copyBtn').innerText = d.copy;
         document.getElementById('lock-msg').innerText = d.lock;
         document.getElementById('slowBtn').innerText = d.slow;
+        document.getElementById('hint-text').innerText = d.hint;
     }
 
     document.getElementById('langSet').onchange = updateUI;
 
-    document.getElementById('modeSet').onchange = () => {
-        const m = document.getElementById('modeSet').value;
+    document.getElementById('modeSet').onchange = function() {
+        const m = this.value;
         document.getElementById('cur-mode-tag').innerText = m.toUpperCase() + " MODE";
-        document.getElementById('slowBtn').style.display = (m==='study')?'flex':'none';
-        document.getElementById('loopBtn').style.display = (m==='master')?'flex':'none';
+        document.getElementById('slowBtn').style.display = (m==='study')?'block':'none';
+        document.getElementById('loopBtn').style.display = (m==='master')?'block':'none';
         document.getElementById('timer-box').style.display = (m==='test')?'block':'none';
-        
-        playCount = 0; audio.playbackRate = 1; audio.loop = false; clearInterval(timer);
-        timer = null;
+        playCount = 0; audio.playbackRate = 1; clearInterval(timer); timer = null;
         document.getElementById('prog').disabled = false;
         document.getElementById('rew').disabled = false;
         document.getElementById('fwd').disabled = false;
@@ -117,14 +135,12 @@
     };
 
     document.getElementById('play').onclick = () => {
-        if(!audio.src) return alert("Please upload audio first!");
+        if(!audio.src) return alert("Сначала загрузите аудио файл!");
         if(audio.paused) {
             const m = document.getElementById('modeSet').value;
             if(m==='test' && !timer) {
                 let t = 120;
                 document.getElementById('prog').disabled = true;
-                document.getElementById('rew').disabled = true;
-                document.getElementById('fwd').disabled = true;
                 timer = setInterval(() => {
                     t--; 
                     let min=Math.floor(t/60), sec=t%60;
@@ -134,11 +150,7 @@
             }
             if(m==='study') { 
                 playCount++; 
-                if(playCount >= 3) { 
-                    document.getElementById('prog').disabled = true; 
-                    document.getElementById('rew').disabled = true;
-                    document.getElementById('fwd').disabled = true;
-                }
+                if(playCount >= 3) { document.getElementById('prog').disabled = true; document.getElementById('rew').disabled = true; document.getElementById('fwd').disabled = true; }
             }
             audio.play(); document.getElementById('play').innerText = '⏸';
         } else {
@@ -151,27 +163,31 @@
         this.style.background = (audio.playbackRate === 0.8) ? "#e67e22" : "#00b894";
     };
 
-    document.getElementById('loopBtn').onclick = () => { 
-        audio.loop = !audio.loop; 
-        document.getElementById('loopBtn').innerText = audio.loop ? "🔄 Loop: ON" : "🔄 Loop: OFF"; 
+    document.getElementById('loopBtn').onclick = function() {
+        audio.loop = !audio.loop;
+        this.innerText = audio.loop ? "🔄 Повтор: ВКЛ" : "🔄 Повтор: ВЫКЛ";
     };
 
-    document.getElementById('audIn').onchange = (e) => { if(e.target.files[0]) audio.src = URL.createObjectURL(e.target.files[0]); };
-    document.getElementById('imgIn').onchange = (e) => { if(e.target.files[0]) document.getElementById('cover').style.backgroundImage = `url(${URL.createObjectURL(e.target.files[0])})`; };
+    document.getElementById('audIn').onchange = (e) => audio.src = URL.createObjectURL(e.target.files[0]);
+    document.getElementById('imgIn').onchange = (e) => {
+        const url = URL.createObjectURL(e.target.files[0]);
+        const cov = document.getElementById('cover');
+        cov.style.backgroundImage = `url(${url})`;
+        cov.classList.add('has-img');
+        document.getElementById('hint-text').style.display = 'none';
+    };
     
     audio.ontimeupdate = () => {
         const p = document.getElementById('prog'); p.max = audio.duration || 0; p.value = audio.currentTime;
         const f = s => new Date(s * 1000).toISOString().substr(14, 5);
         document.getElementById('time-txt').innerText = `${f(audio.currentTime)} / ${f(audio.duration || 0)}`;
     };
-
     document.getElementById('prog').oninput = (e) => audio.currentTime = e.target.value;
     document.getElementById('rew').onclick = () => audio.currentTime -= 10;
     document.getElementById('fwd').onclick = () => audio.currentTime += 10;
-    
     document.getElementById('copyBtn').onclick = () => {
-        const code = `<iframe src="${window.location.href}" width="100%" height="750px" frameborder="0" allow="autoplay"></iframe>`;
-        document.getElementById('ifOut').value = code; navigator.clipboard.writeText(code); alert("Code Copied!");
+        const code = `<iframe src="${window.location.href}" width="100%" height="750px" frameborder="0"></iframe>`;
+        document.getElementById('ifOut').value = code; navigator.clipboard.writeText(code); alert("Код готов для Genially!");
     };
     updateUI();
 </script>
