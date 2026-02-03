@@ -3,210 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deutsch interaktiv Studio PRO</title>
+    <title>Deutsch interaktiv Studio FINAL</title>
     <style>
-        :root { --primary: #6c5ce7; --bg-grad: linear-gradient(-45deg, #0f2027, #203a43, #2c5364); }
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; min-height: 100vh; background: var(--bg-grad); display: flex; justify-content: center; overflow-x: hidden; }
-        .container { display: grid; grid-template-columns: 1fr 1.5fr; gap: 10px; width: 100%; height: 100vh; padding: 10px; box-sizing: border-box; }
-        .panel { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px); padding: 15px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); display: flex; flex-direction: column; overflow-y: auto; position: relative; }
-        .header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; border-bottom: 2px solid var(--primary); padding-bottom: 5px; }
-        .logo { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--primary); background: white; object-fit: contain; }
-        .cover-art { width: 100%; height: 220px; border-radius: 15px; background: #dfe6e9; border: 3px solid #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; background-size: cover; background-position: center; position: relative; }
-        .cover-art::before { content: "🎵"; font-size: 50px; opacity: 0.2; }
-        .cover-art.has-img::before { display: none; }
-        label { display: block; font-size: 0.65rem; font-weight: bold; margin: 8px 0 3px; text-transform: uppercase; color: #636e72; }
-        select, input, textarea { width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 5px; box-sizing: border-box; font-size: 0.8rem; }
-        .btn { width: 100%; min-height: 40px; border: none; border-radius: 10px; background: var(--primary); color: white; cursor: pointer; font-weight: bold; transition: 0.2s; margin-top: 5px; font-size: 0.9rem; }
-        .controls { display: flex; justify-content: center; gap: 12px; margin: 10px 0; }
-        .c-btn { width: 45px; height: 45px; border-radius: 12px; border: none; background: var(--primary); color: white; font-size: 1.1rem; cursor: pointer; }
-        #play { width: 60px; height: 60px; border-radius: 50%; font-size: 1.6rem; }
-        #test-counter { font-size: 0.9rem; font-weight: bold; color: #e74c3c; text-align: center; margin-bottom: 5px; display: none; }
-        #lock-screen { position: absolute; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000; border-radius: 20px; display: none; flex-direction: column; justify-content: center; align-items: center; color: white; text-align: center; padding: 20px; }
-        @media (max-width: 768px) { .container { grid-template-columns: 1fr; height: auto; } }
+        :root { --primary: #6c5ce7; --bg: #0f2027; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; min-height: 100vh; background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); color: #2d3436; overflow-x: hidden; }
+        .container { display: grid; grid-template-columns: 350px 1fr; gap: 0; width: 100vw; height: 100vh; }
+        .panel { background: rgba(255, 255, 255, 0.98); padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; border-right: 1px solid #ddd; }
+        .player-panel { background: #fff; padding: 30px; display: flex; flex-direction: column; align-items: center; position: relative; }
+        .header { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; width: 100%; border-bottom: 2px solid var(--primary); padding-bottom: 10px; }
+        .logo { width: 50px; height: 50px; border-radius: 50%; object-fit: contain; background: #fff; border: 1px solid #eee; }
+        .cover-art { width: 100%; max-width: 500px; height: 300px; border-radius: 20px; background: #f0f0f0 center/cover no-repeat; border: 5px solid #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; position: relative; }
+        .cover-art::after { content: "🎵"; font-size: 80px; opacity: 0.1; position: absolute; }
+        .has-img::after { display: none; }
+        label { display: block; font-size: 0.7rem; font-weight: bold; margin: 12px 0 4px; text-transform: uppercase; color: #666; width: 100%; }
+        select, input, textarea { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #ccc; margin-bottom: 10px; font-size: 0.9rem; }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 12px; background: var(--primary); color: white; cursor: pointer; font-weight: bold; margin-top: 10px; font-size: 1rem; }
+        .controls { display: flex; gap: 20px; margin: 20px 0; align-items: center; }
+        .c-btn { width: 55px; height: 55px; border-radius: 50%; border: none; background: var(--primary); color: white; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .c-btn:disabled { background: #ccc; cursor: not-allowed; }
+        #play { width: 75px; height: 75px; font-size: 2rem; }
+        #lock-screen { position: absolute; inset: 0; background: rgba(0,0,0,0.98); z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; color: white; border-radius: 0; }
+        #attempt-msg { font-weight: bold; color: #ff7675; margin-bottom: 10px; font-size: 1.1rem; }
     </style>
 </head>
 <body>
 
-<div id="lock-screen">
-    <h1 id="lock-msg">Time is up / Попытки исчерпаны</h1>
-    <p id="lock-sub">Вы прослушали аудио 2 раза. Экзамен завершен.</p>
-    <button class="btn" onclick="location.reload()" style="width:140px; background:#e74c3c">Restart</button>
-</div>
+<div id="lock-screen"><h1>Time is up</h1><p>Экзамен окончен. Доступ закрыт.</p><button class="btn" onclick="location.reload()" style="width:200px">Restart</button></div>
 
 <div class="container">
     <div class="panel">
         <div class="header">
-            <img src="logo.png" class="logo" alt="Logo" onerror="this.src='https://via.placeholder.com/60?text=DI'">
-            <h3 id="app-title" style="margin:0; font-size: 1rem;">Audio Studio</h3>
+            <img src="logo.png" class="logo" alt="Logo" onerror="this.src='https://via.placeholder.com/50?text=DI'">
+            <h3 style="margin:0">Audio Editor</h3>
         </div>
-        <label id="lbl-lang">Язык / Sprache</label>
+        
+        <label>🌐 Выберите Язык</label>
         <select id="langSet">
             <option value="ru">Русский</option><option value="de">Deutsch</option><option value="en">English</option>
             <option value="fr">Français</option><option value="it">Italiano</option><option value="es">Español</option>
-            <option value="pl">Polski</option>
+            <option value="uk">Українська</option><option value="tr">Türkçe</option><option value="ar">العربية</option>
+            <option value="zh">中文</option><option value="ja">日本語</option><option value="ko">한국어</option>
+            <option value="pt">Português</option><option value="nl">Nederlands</option><option value="sv">Svenska</option>
+            <option value="no">Norsk</option><option value="fi">Suomi</option><option value="da">Dansk</option>
         </select>
-        <label id="lbl-mode">Режим / Modus</label>
+
+        <label>🎓 Режим работы</label>
         <select id="modeSet">
-            <option value="master">Master (Loop)</option>
-            <option value="study">Study (0.8x Slow)</option>
-            <option value="test">Test (2 Attempts)</option>
+            <option value="master">Master Mode (Loop)</option>
+            <option value="study">Study Mode (2 Attempts/Slow)</option>
+            <option value="test">Test Mode (Exam)</option>
         </select>
+
         <button class="btn" id="slowBtn" style="background:#00b894; display:none">🐢 Slow 0.8x</button>
         <button class="btn" id="loopBtn" style="background:#0984e3; display:none">🔄 Loop: Off</button>
-        <label id="lbl-code">Код Iframe</label>
-        <textarea id="ifOut" readonly style="height:35px;"></textarea>
+
+        <label style="margin-top:20px">📦 Код вставки (Genially)</label>
+        <textarea id="ifOut" readonly placeholder="Здесь будет код..."></textarea>
         <button class="btn" id="copyBtn">Скопировать код</button>
     </div>
 
-    <div class="panel">
-        <div id="cur-mode-tag" style="font-weight:bold; color:var(--primary); font-size:0.65rem; margin-bottom:5px;">MASTER MODE</div>
-        <div class="cover-art" id="cover"><div id="hint-text" style="font-size:0.65rem; color:#636e72;">Обложка</div></div>
+    <div class="player-panel">
+        <div id="attempt-msg"></div>
+        <div class="cover-art" id="cover"></div>
         
-        <div id="test-counter">Попытка: 1 / 2</div>
-        
-        <input type="range" id="prog" value="0" step="0.1" style="width:100%; accent-color: var(--primary);">
-        <div id="time-txt" style="text-align:center; font-weight:bold; font-family: monospace; font-size: 0.8rem;">00:00 / 00:00</div>
-        
+        <input type="range" id="prog" value="0" step="0.1" style="width:100%; max-width:600px; margin-top:30px; accent-color:var(--primary);">
+        <div id="time-txt" style="font-weight:bold; margin: 10px 0;">00:00 / 00:00</div>
+
         <div class="controls">
             <button class="c-btn" id="rew">⏪</button>
             <button class="c-btn" id="play">▶</button>
             <button class="c-btn" id="fwd">⏩</button>
         </div>
-        
-        <label id="lbl-url">🔗 Ссылка на Аудио (URL)</label>
-        <input type="text" id="audUrl" placeholder="https://site.com/track.mp3">
-        <label id="lbl-img-url">🔗 Ссылка на Обложку (URL)</label>
-        <input type="text" id="imgUrl" placeholder="https://site.com/image.jpg">
-        <label id="lbl-audio">📁 Или файл</label>
-        <input type="file" id="audIn" accept="audio/*">
-        <label id="lbl-img">🖼️ Или файл обложки</label>
-        <input type="file" id="imgIn" accept="image/*">
+
+        <div style="width:100%; max-width:500px;">
+            <label>🔗 Прямая ссылка на Аудио (URL)</label>
+            <input type="text" id="audUrl" placeholder="https://example.com/audio.mp3">
+            <label>🔗 Прямая ссылка на Обложку (URL)</label>
+            <input type="text" id="imgUrl" placeholder="https://example.com/cover.jpg">
+            <label>📁 Или загрузить файл аудио</label>
+            <input type="file" id="audIn" accept="audio/*">
+            <label>🖼️ Или загрузить файл обложки</label>
+            <input type="file" id="imgIn" accept="image/*">
+        </div>
     </div>
 </div>
 
 <script>
-    const audio = new Audio(); audio.preservesPitch = true;
-    let testAttempts = 0; 
-    let studyPlayCount = 0;
+    const audio = new Audio();
+    audio.preservesPitch = true;
+    let plays = 0;
 
     const dict = {
-        ru: { title: "Аудио Студия", lang: "🌐 Язык", mode: "🎓 Режим", code: "📦 Код Iframe", audio: "📁 Файл", img: "🖼️ Файл обложки", url: "🔗 Ссылка на аудио", imgUrl: "🔗 Ссылка на обложку", copy: "Скопировать код", lock: "Время вышло!", slow: "🐢 Замедлить 0.8x", hint: "Обложка", attempt: "Попытка" },
-        de: { title: "Audio Studio", lang: "🌐 Sprache", mode: "🎓 Modus", code: "📦 Iframe-Code", audio: "📁 Datei", img: "🖼️ Cover-Datei", url: "🔗 Audio-Link", imgUrl: "🔗 Cover-Link", copy: "Code kopieren", lock: "Zeit um!", slow: "🐢 Langsam 0.8x", hint: "Cover", attempt: "Versuch" },
-        en: { title: "Audio Studio", lang: "🌐 Language", mode: "🎓 Mode", code: "📦 Iframe Code", audio: "📁 File", img: "🖼️ Cover File", url: "🔗 Audio URL", imgUrl: "🔗 Cover URL", copy: "Copy Code", lock: "Time is up!", slow: "🐢 Slow 0.8x", hint: "Cover", attempt: "Attempt" }
+        ru: { mode: "Режим", code: "Код Iframe", copy: "Скопировать код", audio: "Аудио", img: "Обложка", lock: "Время вышло", slow: "Замедлить 0.8x" },
+        de: { mode: "Modus", code: "Iframe-Code", copy: "Code kopieren", audio: "Audio", img: "Cover", lock: "Zeit um", slow: "Langsam 0.8x" },
+        en: { mode: "Mode", code: "Iframe Code", copy: "Copy Code", audio: "Audio", img: "Cover", lock: "Time is up", slow: "Slow 0.8x" }
     };
 
-    function updateUI() {
-        const d = dict[document.getElementById('langSet').value] || dict['en'];
-        document.getElementById('app-title').innerText = d.title;
-        document.getElementById('lbl-lang').innerText = d.lang;
-        document.getElementById('lbl-mode').innerText = d.mode;
-        document.getElementById('lbl-url').innerText = d.url;
-        document.getElementById('lbl-img-url').innerText = d.imgUrl;
-        document.getElementById('lbl-audio').innerText = d.audio;
-        document.getElementById('lbl-img').innerText = d.img;
-        document.getElementById('copyBtn').innerText = d.copy;
-        document.getElementById('hint-text').innerText = d.hint;
-        updateTestCounter();
-    }
-
-    function updateTestCounter() {
-        const d = dict[document.getElementById('langSet').value] || dict['en'];
-        document.getElementById('test-counter').innerText = `${d.attempt}: ${testAttempts + 1} / 2`;
-    }
-
-    document.getElementById('langSet').onchange = updateUI;
-    
-    document.getElementById('modeSet').onchange = function() {
-        const m = this.value; 
-        document.getElementById('cur-mode-tag').innerText = m.toUpperCase() + " MODE";
-        document.getElementById('slowBtn').style.display = (m==='study')?'block':'none';
-        document.getElementById('loopBtn').style.display = (m==='master')?'block':'none';
-        document.getElementById('test-counter').style.display = (m==='test')?'block':'none';
-        
-        testAttempts = 0; studyPlayCount = 0;
-        audio.playbackRate = 1; audio.loop = false;
-        document.getElementById('prog').disabled = false;
-        document.getElementById('rew').disabled = false;
-        document.getElementById('fwd').disabled = false;
-        updateTestCounter();
-    };
-
-    document.getElementById('audUrl').oninput = function() { if(this.value) audio.src = this.value; };
-    document.getElementById('audIn').onchange = (e) => audio.src = URL.createObjectURL(e.target.files[0]);
-    
-    document.getElementById('imgUrl').oninput = function() {
-        if(this.value) {
-            const cov = document.getElementById('cover');
-            cov.style.backgroundImage = `url(${this.value})`;
-            cov.classList.add('has-img');
-            document.getElementById('hint-text').style.display = 'none';
+    // Загрузка контента по URL
+    document.getElementById('audUrl').addEventListener('input', (e) => { if(e.target.value) audio.src = e.target.value; });
+    document.getElementById('imgUrl').addEventListener('input', (e) => {
+        if(e.target.value) {
+            document.getElementById('cover').style.backgroundImage = `url(${e.target.value})`;
+            document.getElementById('cover').classList.add('has-img');
         }
+    });
+
+    // Загрузка файлом
+    document.getElementById('audIn').onchange = (e) => { audio.src = URL.createObjectURL(e.target.files[0]); };
+    document.getElementById('imgIn').onchange = (e) => {
+        const url = URL.createObjectURL(e.target.files[0]);
+        document.getElementById('cover').style.backgroundImage = `url(${url})`;
+        document.getElementById('cover').classList.add('has-img');
+    };
+
+    document.getElementById('modeSet').onchange = function() {
+        const m = this.value;
+        plays = 0;
+        audio.loop = false;
+        audio.playbackRate = 1;
+        document.getElementById('slowBtn').style.display = (m==='study') ? 'block' : 'none';
+        document.getElementById('loopBtn').style.display = (m==='master') ? 'block' : 'none';
+        document.getElementById('attempt-msg').innerText = "";
+        
+        // Сброс блокировок
+        document.getElementById('prog').disabled = (m === 'test');
+        document.getElementById('rew').disabled = (m === 'test');
+        document.getElementById('fwd').disabled = (m === 'test');
     };
 
     document.getElementById('play').onclick = () => {
-        if(!audio.src) return alert("Добавьте ссылку или файл!");
-        const m = document.getElementById('modeSet').value;
-
+        if(!audio.src) return alert("Загрузите аудио файл или вставьте ссылку!");
         if(audio.paused) {
-            if(m === 'test') {
-                document.getElementById('prog').disabled = true;
-                document.getElementById('rew').disabled = true;
-                document.getElementById('fwd').disabled = true;
-            }
-            audio.play(); 
+            audio.play();
             document.getElementById('play').innerText = '⏸';
         } else {
-            audio.pause(); 
+            audio.pause();
             document.getElementById('play').innerText = '▶';
         }
     };
 
-    audio.onended = () => {
+    audio.onplay = () => {
         const m = document.getElementById('modeSet').value;
-        document.getElementById('play').innerText = '▶';
-        
-        if(m === 'test') {
-            testAttempts++;
-            updateTestCounter();
-            if(testAttempts >= 2) {
+        if(m === 'study' || m === 'test') {
+            plays++;
+            if(m === 'test') document.getElementById('attempt-msg').innerText = "Попытка: " + plays + " / 2";
+            if(plays >= 3) {
+                audio.pause();
                 document.getElementById('lock-screen').style.display = 'flex';
             }
         }
-        if(m === 'study') {
-            studyPlayCount++;
-            if(studyPlayCount >= 3) {
-                document.getElementById('prog').disabled = true;
-                document.getElementById('rew').disabled = true;
-                document.getElementById('fwd').disabled = true;
-            }
+    };
+
+    audio.onended = () => {
+        document.getElementById('play').innerText = '▶';
+        const m = document.getElementById('modeSet').value;
+        if(m === 'test' && plays >= 2) {
+            document.getElementById('lock-screen').style.display = 'flex';
         }
     };
 
-    document.getElementById('slowBtn').onclick = function() {
+    document.getElementById('slowBtn').onclick = () => {
         audio.playbackRate = (audio.playbackRate === 1) ? 0.8 : 1;
-        this.style.background = (audio.playbackRate === 0.8) ? "#e67e22" : "#00b894";
+        document.getElementById('slowBtn').style.opacity = (audio.playbackRate === 0.8) ? "0.6" : "1";
     };
 
-    document.getElementById('loopBtn').onclick = function() {
+    document.getElementById('loopBtn').onclick = () => {
         audio.loop = !audio.loop;
-        this.innerText = audio.loop ? "🔄 Loop: ON" : "🔄 Loop: OFF";
+        document.getElementById('loopBtn').innerText = audio.loop ? "🔄 Loop: ON" : "🔄 Loop: OFF";
     };
 
     audio.ontimeupdate = () => {
-        const p = document.getElementById('prog'); p.max = audio.duration || 0; p.value = audio.currentTime;
-        const f = s => new Date(s * 1000).toISOString().substr(14, 5);
-        document.getElementById('time-txt').innerText = `${f(audio.currentTime)} / ${f(audio.duration || 0)}`;
+        const p = document.getElementById('prog');
+        p.max = audio.duration || 0;
+        p.value = audio.currentTime;
+        const fmt = s => new Date(s * 1000).toISOString().substr(14, 5);
+        document.getElementById('time-txt').innerText = fmt(audio.currentTime) + " / " + fmt(audio.duration || 0);
     };
 
     document.getElementById('prog').oninput = (e) => audio.currentTime = e.target.value;
     document.getElementById('rew').onclick = () => audio.currentTime -= 10;
     document.getElementById('fwd').onclick = () => audio.currentTime += 10;
-    
+
     document.getElementById('copyBtn').onclick = () => {
         const code = `<iframe src="${window.location.href}" width="100%" height="600px" frameborder="0" scrolling="no"></iframe>`;
-        document.getElementById('ifOut').value = code; navigator.clipboard.writeText(code); alert("Код скопирован!");
+        document.getElementById('ifOut').value = code;
+        navigator.clipboard.writeText(code);
+        alert("Код скопирован!");
     };
-    updateUI();
 </script>
 </body>
 </html>
