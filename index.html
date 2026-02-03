@@ -3,267 +3,226 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Audio Studio EDU PRO</title>
+    <title>Audio Studio EDU - Deep Ocean Edition</title>
     <style>
         :root {
             --primary: #6c5ce7;
-            --glass: rgba(255, 255, 255, 0.9);
-        }
-
-        /* Оптимизированный Хамелеон */
-        @keyframes chameleon {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            --ocean-bg: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            --panel-bg: rgba(255, 255, 255, 0.95);
         }
 
         body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             margin: 0; min-height: 100vh;
             display: flex; justify-content: center; align-items: center;
-            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-            background-size: 300% 300%;
-            animation: chameleon 15s ease infinite;
-            transition: 0.5s;
+            background: var(--ocean-bg);
+            color: #2d3436;
         }
 
         .container {
-            display: grid; grid-template-columns: 360px 500px; gap: 20px;
-            max-width: 950px; width: 95%; position: relative;
+            display: grid; grid-template-columns: 350px 450px; gap: 20px;
+            max-width: 900px; width: 95%; position: relative;
         }
 
         .panel {
-            background: var(--glass); backdrop-filter: blur(10px);
-            padding: 25px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            border: 1px solid rgba(255,255,255,0.3);
+            background: var(--panel-bg); padding: 25px; border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
         }
 
-        .header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
-        .logo { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--primary); }
+        .header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .logo { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--primary); object-fit: contain; }
 
-        .group { margin-bottom: 15px; }
-        label { display: block; font-size: 0.75rem; font-weight: bold; color: #666; margin-bottom: 5px; text-transform: uppercase; }
-        
-        select, input, textarea {
-            width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #ddd;
-            font-size: 0.9rem; box-sizing: border-box;
-        }
+        label { display: block; font-size: 0.7rem; font-weight: bold; color: #666; margin: 10px 0 5px; text-transform: uppercase; }
+        select, input, textarea { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; box-sizing: border-box; }
 
         .btn {
-            width: 100%; padding: 12px; border: none; border-radius: 12px;
+            width: 100%; padding: 14px; border: none; border-radius: 10px;
             background: var(--primary); color: white; cursor: pointer;
             font-weight: bold; display: flex; align-items: center; justify-content: center;
-            gap: 8px; transition: 0.3s; white-space: nowrap;
+            gap: 8px; margin-top: 10px; transition: 0.2s;
         }
-        .btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
+        .btn:hover { filter: brightness(1.1); }
 
-        /* Плеер */
         .cover { 
-            width: 100%; height: 260px; border-radius: 15px; 
-            background: #eee center/cover no-repeat; border: 4px solid #fff;
-            margin-bottom: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            width: 100%; height: 240px; border-radius: 12px; background: #dfe6e9 center/cover no-repeat;
+            border: 3px solid #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-bottom: 15px;
         }
 
-        .controls { display: flex; justify-content: center; gap: 15px; margin: 15px 0; }
-        .c-btn { 
-            width: 55px; height: 55px; border-radius: 15px; border: none;
-            background: var(--primary); color: white; font-size: 1.2rem; cursor: pointer;
-        }
-        .c-btn:disabled { background: #ccc; cursor: not-allowed; }
+        .controls { display: flex; justify-content: center; gap: 10px; margin: 15px 0; }
+        .c-btn { width: 50px; height: 50px; border-radius: 12px; border: none; background: var(--primary); color: white; cursor: pointer; }
+        .c-btn:disabled { background: #b2bec3; cursor: not-allowed; }
 
-        #timer { font-size: 1.5rem; font-weight: bold; color: #d63031; text-align: center; margin: 10px 0; }
-        
-        /* Блокировщик экрана */
+        #timer-box { font-size: 1.4rem; font-weight: bold; color: #d63031; text-align: center; margin-bottom: 10px; }
         #lock-screen {
-            position: absolute; inset: 0; background: rgba(0,0,0,0.8);
-            border-radius: 25px; display: none; flex-direction: column;
+            position: absolute; inset: 0; background: rgba(0,0,0,0.9);
+            border-radius: 20px; display: none; flex-direction: column;
             justify-content: center; align-items: center; color: white; z-index: 100;
-        }
-
-        .status-badge { 
-            display: inline-block; padding: 4px 10px; border-radius: 10px; 
-            font-size: 0.7rem; color: white; background: var(--primary); margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div id="lock-screen"><h1>⏳ Time is up</h1><button class="btn" onclick="location.reload()" style="width:200px">Restart</button></div>
+    <div id="lock-screen"><h1>Time is up</h1><button class="btn" onclick="location.reload()" style="width:150px">Restart</button></div>
 
     <div class="panel">
         <div class="header">
             <img src="7929d202-ccf0-4e08-8785-785e9179ebd0_removalai_preview.png" class="logo" alt="Logo">
-            <h3 style="margin:0">Audio Studio EDU</h3>
+            <h3 style="margin:0">Audio EDU</h3>
         </div>
 
-        <div class="group">
-            <label>🌐 Язык изучения</label>
-            <select id="lang">
-                <option value="de" data-tag="germany">Deutsch</option>
-                <option value="ru" data-tag="russia">Русский</option>
-                <option value="en" data-tag="london">English</option>
-                <option value="zh" data-tag="china">中文</option>
-                <option value="fr" data-tag="paris">Français</option>
-                <option value="es" data-tag="spain">Español</option>
-            </select>
-        </div>
+        <label>Язык</label>
+        <select id="lang">
+            <option value="de">Deutsch</option>
+            <option value="ru">Русский</option>
+            <option value="zh">中文</option>
+            <option value="en">English</option>
+        </select>
 
-        <div class="group">
-            <label>🎓 Режим</label>
-            <select id="mode">
-                <option value="teacher">Учитель (Master)</option>
-                <option value="student">Ученик (Study)</option>
-                <option value="test">Экзамен (Test)</option>
-            </select>
-        </div>
+        <label>Режим</label>
+        <select id="mode">
+            <option value="master">Master Mode (Teacher)</option>
+            <option value="study">Study Mode (Student)</option>
+            <option value="test">Test Mode (Exam)</option>
+        </select>
 
-        <div id="extra-controls" style="margin-top:15px">
+        <div id="mode-tools" style="margin-top:15px">
             <button class="btn" id="slowBtn" style="background:#00b894; display:none">🐢 Slow Motion (0.8x)</button>
             <button class="btn" id="loopBtn" style="background:#0984e3; display:none">🔄 Loop: Off</button>
         </div>
 
-        <div class="group" style="margin-top:20px">
-            <label>📦 Код для Genially</label>
-            <textarea id="iframe-code" readonly></textarea>
-            <button class="btn" id="copyBtn" style="margin-top:10px">Скопировать код</button>
-        </div>
+        <label style="margin-top:20px">Iframe Code</label>
+        <textarea id="iframe-out" readonly style="height:50px; font-size:0.7rem"></textarea>
+        <button class="btn" id="copyBtn">Скопировать код</button>
     </div>
 
     <div class="panel">
-        <div class="status-badge" id="mode-tag">MODE: TEACHER</div>
+        <div id="mode-info" style="font-size: 0.7rem; font-weight: bold; color: var(--primary); margin-bottom: 5px;">MASTER MODE</div>
         <div class="cover" id="coverArt"></div>
         
-        <div id="timer">00:00</div>
+        <div id="timer-box" style="display:none">02:00</div>
         
-        <input type="range" id="progress" value="0" step="0.1" style="width:100%; accent-color: var(--primary);">
-        <div id="timeText" style="text-align:center; font-size:0.8rem; margin-top:5px">00:00 / 00:00</div>
+        <input type="range" id="progress" value="0" step="0.1" style="width:100%">
+        <div style="text-align:center; font-size:0.8rem; margin: 5px 0">
+            <span id="curTime">00:00</span> / <span id="durTime">00:00</span>
+        </div>
 
         <div class="controls">
-            <button class="c-btn" id="rewBtn">⏪</button>
-            <button class="c-btn" id="playBtn" style="width:70px; height:70px; border-radius:50%">▶</button>
-            <button class="c-btn" id="fwdBtn">⏩</button>
+            <button class="c-btn" id="rew">⏪</button>
+            <button class="c-btn" id="play" style="width:60px; height:60px; border-radius:50%">▶</button>
+            <button class="c-btn" id="fwd">⏩</button>
         </div>
 
-        <div class="group" style="border-top:1px solid #eee; padding-top:15px">
-            <label>📁 Загрузить аудио файл</label>
-            <input type="file" id="audioFile" accept="audio/*">
-        </div>
+        <label>Загрузить аудио</label>
+        <input type="file" id="audioInput" accept="audio/*">
     </div>
 </div>
 
 <script>
     const audio = new Audio();
     let playCount = 0;
-    let examTimer;
-    let isLoop = false;
+    let testTimer;
 
-    // Режимы и обложки
-    const updateUI = () => {
-        const mode = document.getElementById('mode').value;
-        const tag = document.getElementById('mode-tag');
-        const slow = document.getElementById('slowBtn');
-        const loop = document.getElementById('loopBtn');
-        const prog = document.getElementById('progress');
+    const modeSelect = document.getElementById('mode');
+    const playBtn = document.getElementById('play');
+    const prog = document.getElementById('progress');
+
+    // Логика переключения режимов
+    modeSelect.onchange = () => {
+        const mode = modeSelect.value;
+        document.getElementById('mode-info').innerText = mode.toUpperCase() + " MODE";
+        document.getElementById('slowBtn').style.display = (mode === 'study') ? 'flex' : 'none';
+        document.getElementById('loopBtn').style.display = (mode === 'master') ? 'flex' : 'none';
+        document.getElementById('timer-box').style.display = (mode === 'test') ? 'block' : 'none';
         
-        // Сброс
-        tag.innerText = `MODE: ${mode.toUpperCase()}`;
-        slow.style.display = (mode === 'student') ? 'flex' : 'none';
-        loop.style.display = (mode === 'teacher') ? 'flex' : 'none';
-        prog.disabled = false;
+        // Сброс состояния
         playCount = 0;
-        clearInterval(examTimer);
-        document.getElementById('timer').innerText = (mode === 'test') ? "02:00" : "00:00";
-
-        // Обложка по языку
-        const langTag = document.getElementById('lang').selectedOptions[0].dataset.tag;
-        document.getElementById('coverArt').style.backgroundImage = `url('https://images.unsplash.com/photo-1500000000000?q=80&w=500&auto=format&fit=crop&sig=${Math.random()}')`;
-        // Примечание: В реальном проекте лучше использовать фиксированные ссылки, API Unsplash требует ключ.
+        audio.playbackRate = 1;
+        audio.loop = false;
+        clearInterval(testTimer);
+        prog.disabled = false;
+        document.getElementById('rew').disabled = false;
+        document.getElementById('fwd').disabled = false;
+        document.getElementById('timer-box').innerText = "02:00";
     };
 
-    document.getElementById('mode').onchange = updateUI;
-    document.getElementById('lang').onchange = updateUI;
-
-    // Логика Плеера
-    document.getElementById('playBtn').onclick = () => {
-        if (!audio.src) return alert("Сначала выберите файл!");
+    // Воспроизведение
+    playBtn.onclick = () => {
+        if (!audio.src) return;
         
         if (audio.paused) {
-            const mode = document.getElementById('mode').value;
+            const mode = modeSelect.value;
             playCount++;
 
             if (mode === 'test') {
-                document.getElementById('progress').disabled = true;
-                document.getElementById('rewBtn').disabled = true;
-                document.getElementById('fwdBtn').disabled = true;
-                startTestTimer();
+                prog.disabled = true;
+                document.getElementById('rew').disabled = true;
+                document.getElementById('fwd').disabled = true;
+                startTest();
             }
 
-            if (mode === 'student' && playCount >= 3) {
-                document.getElementById('progress').disabled = true;
-                document.getElementById('rewBtn').disabled = true;
-                document.getElementById('fwdBtn').disabled = true;
-                alert("Внимание: 3-е прослушивание. Перемотка заблокирована.");
+            if (mode === 'study' && playCount >= 3) {
+                prog.disabled = true;
+                document.getElementById('rew').disabled = true;
+                document.getElementById('fwd').disabled = true;
             }
 
             audio.play();
-            document.getElementById('playBtn').innerText = '⏸';
+            playBtn.innerText = '⏸';
         } else {
             audio.pause();
-            document.getElementById('playBtn').innerText = '▶';
+            playBtn.innerText = '▶';
         }
     };
 
-    function startTestTimer() {
-        let timeLeft = 120;
-        examTimer = setInterval(() => {
-            timeLeft--;
-            let m = Math.floor(timeLeft/60), s = timeLeft%60;
-            document.getElementById('timer').innerText = `${m}:${s < 10 ? '0'+s : s}`;
-            if (timeLeft <= 0) {
+    function startTest() {
+        let time = 120;
+        testTimer = setInterval(() => {
+            time--;
+            let m = Math.floor(time/60), s = time%60;
+            document.getElementById('timer-box').innerText = `${m}:${s < 10 ? '0'+s : s}`;
+            if (time <= 0) {
                 audio.pause();
                 document.getElementById('lock-screen').style.display = 'flex';
-                clearInterval(examTimer);
+                clearInterval(testTimer);
             }
         }, 1000);
     }
 
-    // Доп. функции
+    // Управление
     document.getElementById('slowBtn').onclick = () => {
         audio.playbackRate = (audio.playbackRate === 1) ? 0.8 : 1;
         document.getElementById('slowBtn').innerText = (audio.playbackRate === 0.8) ? "▶ Normal Speed" : "🐢 Slow Motion (0.8x)";
     };
 
     document.getElementById('loopBtn').onclick = () => {
-        isLoop = !isLoop;
-        audio.loop = isLoop;
-        document.getElementById('loopBtn').innerText = isLoop ? "🔄 Loop: ON" : "🔄 Loop: OFF";
+        audio.loop = !audio.loop;
+        document.getElementById('loopBtn').innerText = audio.loop ? "🔄 Loop: ON" : "🔄 Loop: OFF";
     };
 
-    document.getElementById('audioFile').onchange = (e) => {
+    document.getElementById('audioInput').onchange = (e) => {
         const file = e.target.files[0];
         if (file) audio.src = URL.createObjectURL(file);
     };
 
     audio.ontimeupdate = () => {
-        const prog = document.getElementById('progress');
         prog.max = audio.duration || 0;
         prog.value = audio.currentTime;
         const fmt = s => new Date(s * 1000).toISOString().substr(14, 5);
-        document.getElementById('timeText').innerText = `${fmt(audio.currentTime)} / ${fmt(audio.duration || 0)}`;
+        document.getElementById('curTime').innerText = fmt(audio.currentTime);
+        document.getElementById('durTime').innerText = fmt(audio.duration || 0);
     };
 
-    document.getElementById('progress').oninput = (e) => audio.currentTime = e.target.value;
-    document.getElementById('rewBtn').onclick = () => audio.currentTime -= 10;
-    document.getElementById('fwdBtn').onclick = () => audio.currentTime += 10;
+    prog.oninput = (e) => audio.currentTime = e.target.value;
+    document.getElementById('rew').onclick = () => audio.currentTime -= 10;
+    document.getElementById('fwd').onclick = () => audio.currentTime += 10;
 
     document.getElementById('copyBtn').onclick = () => {
         const code = `<iframe src="${window.location.href}" width="100%" height="700px" frameborder="0"></iframe>`;
+        document.getElementById('iframe-out').value = code;
         navigator.clipboard.writeText(code);
         alert("Код скопирован!");
     };
-
-    updateUI();
 </script>
 </body>
 </html>
