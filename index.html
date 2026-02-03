@@ -3,244 +3,242 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Audio Studio EDU PRO - Final Edition</title>
+    <title>Audio Studio Global PRO</title>
     <style>
-        :root {
-            --primary: #6c5ce7;
-            --glass: rgba(255, 255, 255, 0.88);
-        }
-
-        /* Темы фона */
+        :root { --primary: #6c5ce7; --glass: rgba(255, 255, 255, 0.92); }
+        
+        /* ТЕМЫ */
         body.chameleon {
             background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
             background-size: 400% 400%;
-            animation: gradientMove 15s ease infinite;
+            animation: move 15s ease infinite;
         }
-        body.pastel {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        }
+        body.pastel { background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%); }
+        @keyframes move { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
 
-        @keyframes gradientMove { 0% {background-position:0% 50%} 50% {background-position:100% 50%} 100% {background-position:0% 50%} }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; min-height: 100vh; display: flex; justify-content: center; align-items: center; transition: 0.5s; overflow-x: hidden; }
+        .container { display: grid; grid-template-columns: 380px 520px; gap: 20px; width: 95%; max-width: 1000px; position: relative; }
+        .panel { background: var(--glass); backdrop-filter: blur(15px); padding: 25px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.4); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        
+        .header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid var(--primary); }
+        .logo { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--primary); object-fit: contain; background: white; }
 
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; min-height: 100vh; display: flex; justify-content: center; align-items: center; transition: 0.5s; }
+        label { display: block; font-size: 0.7rem; font-weight: bold; margin: 12px 0 5px; text-transform: uppercase; color: #444; }
+        select, input, textarea { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #ddd; font-size: 0.9rem; background: #fff; }
 
-        .container { display: grid; grid-template-columns: 380px 520px; gap: 20px; max-width: 1000px; width: 95%; position: relative; }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 12px; background: var(--primary); color: white; cursor: pointer; font-weight: bold; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
+        .btn:hover { filter: brightness(1.1); transform: scale(1.02); }
 
-        .panel { background: var(--glass); backdrop-filter: blur(15px); padding: 25px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.4); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
-
-        .header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 10px; }
-        /* Логотип по вашему названию с GitHub */
-        .logo { width: 55px; height: 55px; border-radius: 50%; border: 2px solid var(--primary); background: #fff; object-fit: contain; }
-
-        label { display: block; font-size: 0.7rem; font-weight: 700; color: #555; margin: 12px 0 5px; text-transform: uppercase; }
-        select, input, textarea { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.1); font-size: 0.9rem; }
-
-        .btn { width: 100%; padding: 14px; border: none; border-radius: 12px; background: var(--primary); color: white; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; transition: 0.3s; }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(108, 92, 231, 0.3); }
-
-        .cover-box { width: 100%; height: 260px; border-radius: 20px; background: #eee center/cover no-repeat; border: 5px solid #fff; box-shadow: 0 10px 20px rgba(0,0,0,0.1); margin-bottom: 15px; position: relative; }
+        .cover-art { width: 100%; height: 260px; border-radius: 20px; background: #eee center/cover no-repeat; border: 5px solid #fff; box-shadow: 0 10px 20px rgba(0,0,0,0.1); margin-bottom: 15px; }
 
         .controls { display: flex; justify-content: center; gap: 15px; margin: 15px 0; }
-        .c-btn { width: 55px; height: 55px; border-radius: 15px; border: none; background: var(--primary); color: white; font-size: 1.3rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .c-btn:disabled { background: #b2bec3; cursor: not-allowed; }
+        .c-btn { width: 55px; height: 55px; border-radius: 15px; border: none; background: var(--primary); color: white; font-size: 1.2rem; cursor: pointer; }
+        .c-btn:disabled { background: #ccc; opacity: 0.5; cursor: not-allowed; }
 
-        #timer { font-size: 1.8rem; font-weight: bold; color: #ff4757; text-align: center; margin-bottom: 10px; display: none; font-family: monospace; }
-        
-        #lock-screen { position: absolute; inset: 0; background: rgba(0,0,0,0.9); border-radius: 30px; display: none; flex-direction: column; justify-content: center; align-items: center; color: white; z-index: 1000; }
-
-        .status-tag { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: bold; color: white; background: var(--primary); margin-bottom: 10px; }
+        #timer-box { font-size: 1.8rem; font-weight: bold; color: #e74c3c; text-align: center; margin-bottom: 10px; display: none; }
+        #lock-screen { position: absolute; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; border-radius: 30px; display: none; flex-direction: column; justify-content: center; align-items: center; color: white; text-align: center; padding: 20px; }
     </style>
 </head>
-<body class="chameleon"> <div class="container">
-    <div id="lock-screen"><h1>Time is up</h1><button class="btn" onclick="location.reload()" style="width:150px">Restart</button></div>
+<body class="chameleon">
 
+<div id="lock-screen">
+    <h1 id="lock-msg">Time is up</h1>
+    <button id="btn-restart" class="btn" onclick="location.reload()" style="width:180px">Restart</button>
+</div>
+
+<div class="container">
     <div class="panel">
         <div class="header">
-            <img src="7929d202-ccf0-4e08-8785-785e9179ebd0_removalai_preview.png" class="logo" alt="Logo" onerror="this.src='https://via.placeholder.com/55?text=EDU'">
-            <h3 style="margin:0">Audio EDU Pro</h3>
+            <img src="7929d202-ccf0-4e08-8785-785e9179ebd0_removalai_preview.png" class="logo" alt="Logo" onerror="this.src='https://via.placeholder.com/60?text=LOGO'">
+            <h3 style="margin:0">Audio Studio PRO</h3>
         </div>
 
-        <label>🎨 Фон редактора</label>
-        <select id="bgTheme">
-            <option value="chameleon">Градиент "Хамелеон"</option>
-            <option value="pastel">Пастельные тона</option>
+        <label id="lbl-theme">🎨 Тема фона</label>
+        <select id="themeSet">
+            <option value="chameleon">Chameleon</option>
+            <option value="pastel">Pastel</option>
         </select>
 
-        <label>🌐 Язык (Авто-обложка)</label>
-        <select id="langSelect">
-            <option value="de" data-img="germany,berlin">Deutsch</option>
-            <option value="ru" data-img="russia,nature">Русский</option>
-            <option value="zh" data-img="china,culture">中文 (Китайский)</option>
-            <option value="en" data-img="london,bigben">English</option>
-            <option value="fr" data-img="paris,france">Français</option>
+        <label id="lbl-lang">🌐 Язык изучения</label>
+        <select id="langSet">
+            <option value="ru" data-img="russia">Русский</option>
+            <option value="en" data-img="london">English</option>
+            <option value="de" data-img="germany">Deutsch</option>
+            <option value="fr" data-img="paris">Français</option>
+            <option value="es" data-img="spain">Español</option>
+            <option value="it" data-img="italy">Italiano</option>
+            <option value="zh" data-img="china">中文 (Chinese)</option>
+            <option value="ja" data-img="tokyo">日本語 (Japanese)</option>
+            <option value="ko" data-img="seoul">한국어 (Korean)</option>
+            <option value="tr" data-img="istanbul">Türkçe</option>
+            <option value="ar" data-img="dubai">العربية</option>
+            <option value="pt" data-img="lisbon">Português</option>
+            <option value="nl" data-img="amsterdam">Nederlands</option>
+            <option value="pl" data-img="warsaw">Polski</option>
+            <option value="sv" data-img="stockholm">Svenska</option>
+            <option value="el" data-img="athens">Ελληνικά</option>
+            <option value="he" data-img="israel">עברית</option>
+            <option value="hi" data-img="delhi">हिन्दी</option>
+            <option value="vi" data-img="vietnam">Tiếng Việt</option>
+            <option value="cs" data-img="prague">Čeština</option>
         </select>
 
-        <label>🎓 Режим</label>
-        <select id="modeSelect">
-            <option value="master">Master Mode (Teacher)</option>
-            <option value="study">Study Mode (Student)</option>
-            <option value="test">Test Mode (Exam)</option>
+        <label id="lbl-mode">🎓 Режим</label>
+        <select id="modeSet">
+            <option value="master">Master (Teacher)</option>
+            <option value="study">Study (Student)</option>
+            <option value="test">Test (Exam)</option>
         </select>
 
-        <div style="margin-top:15px">
-            <button class="btn" id="slowBtn" style="background:#00b894; display:none">🐢 Slow Motion (0.8x)</button>
-            <button class="btn" id="loopBtn" style="background:#0984e3; display:none">🔄 Loop: OFF</button>
+        <div id="extra-btns" style="margin-top:15px">
+            <button class="btn" id="slowBtn" style="background:#00b894; display:none">🐢 Slow 0.8x</button>
+            <button class="btn" id="loopBtn" style="background:#0984e3; display:none">🔄 Loop: Off</button>
         </div>
 
-        <label style="margin-top:20px">📦 Код для Genially</label>
-        <textarea id="iframeOutput" readonly style="height:50px"></textarea>
+        <label id="lbl-code" style="margin-top:20px">📦 Код Iframe</label>
+        <textarea id="ifOut" readonly style="height:45px; font-size:0.7rem"></textarea>
         <button class="btn" id="copyBtn">Скопировать код</button>
     </div>
 
     <div class="panel">
-        <div class="status-tag" id="modeTag">MASTER MODE</div>
-        <div class="cover-box" id="coverArt"></div>
+        <div id="cur-mode-tag" style="font-weight:bold; color:var(--primary); font-size:0.7rem; margin-bottom:5px">MASTER MODE</div>
+        <div class="cover-art" id="cover"></div>
+        <div id="timer-box">02:00</div>
         
-        <div id="timer">02:00</div>
-        
-        <input type="range" id="progressBar" value="0" step="0.1" style="width:100%; accent-color: var(--primary);">
-        <div id="timeInfo" style="text-align:center; font-size:0.8rem; margin:5px 0; font-family:monospace; font-weight:bold;">00:00 / 00:00</div>
+        <input type="range" id="prog" value="0" step="0.1" style="width:100%">
+        <div style="text-align:center; font-family:monospace; margin-top:5px" id="time-txt">00:00 / 00:00</div>
 
         <div class="controls">
-            <button class="c-btn" id="rewBtn">⏪</button>
-            <button class="c-btn" id="playBtn" style="width:75px; height:75px; border-radius:50%">▶</button>
-            <button class="c-btn" id="fwdBtn">⏩</button>
+            <button class="c-btn" id="rew">⏪</button>
+            <button class="c-btn" id="play" style="width:70px; height:70px; border-radius:50%">▶</button>
+            <button class="c-btn" id="fwd">⏩</button>
         </div>
 
-        <div style="border-top:1px solid #ddd; padding-top:10px">
-            <label>📁 Загрузить своё аудио</label>
-            <input type="file" id="audioInput" accept="audio/*">
-            
-            <label>🖼️ Загрузить свою обложку</label>
-            <input type="file" id="coverInput" accept="image/*">
-        </div>
+        <label id="lbl-audio">📁 Загрузить аудио</label>
+        <input type="file" id="audIn" accept="audio/*">
+        <label id="lbl-cover">🖼️ Загрузить обложку</label>
+        <input type="file" id="imgIn" accept="image/*">
     </div>
 </div>
 
 <script>
     const audio = new Audio();
-    let playCount = 0;
-    let timerInt;
+    let playCount = 0, timer;
 
-    // 1. Смена фона редактора
-    document.getElementById('bgTheme').onchange = (e) => {
-        document.body.className = e.target.value;
+    const dict = {
+        ru: { theme: "🎨 Тема фона", lang: "🌐 Язык изучения", mode: "🎓 Режим", code: "📦 Код Iframe", audio: "📁 Загрузить аудио", cover: "🖼️ Загрузить обложку", copy: "Скопировать код", lock: "Время вышло", restart: "Перезапустить", slow: "🐢 Замедлить 0.8x", loop: "🔄 Повтор", master: "Учитель (Master)", study: "Ученик (Study)", test: "Экзамен (Test)" },
+        en: { theme: "🎨 Background Theme", lang: "🌐 Learning Language", mode: "🎓 Mode", code: "📦 Iframe Code", audio: "📁 Upload Audio", cover: "🖼️ Upload Cover", copy: "Copy Code", lock: "Time is up", restart: "Restart", slow: "🐢 Slow 0.8x", loop: "🔄 Loop", master: "Master (Teacher)", study: "Study (Student)", test: "Test (Exam)" },
+        de: { theme: "🎨 Hintergrundthema", lang: "🌐 Lernsprache", mode: "🎓 Modus", code: "📦 Iframe-Code", audio: "📁 Audio hochladen", cover: "🖼️ Cover hochladen", copy: "Code kopieren", lock: "Zeit ist um", restart: "Neustart", slow: "🐢 Langsam 0.8x", loop: "🔄 Wiederholung", master: "Lehrer", study: "Schüler", test: "Prüfung" },
+        fr: { theme: "🎨 Thème de fond", lang: "🌐 Langue", mode: "🎓 Mode", code: "📦 Code Iframe", audio: "📁 Charger l'audio", cover: "🖼️ Charger la couverture", copy: "Copier le code", lock: "Temps écoulé", restart: "Redémarrer", slow: "🐢 Ralenti 0.8x", loop: "🔄 Boucle", master: "Maître", study: "Étude", test: "Test" },
+        es: { theme: "🎨 Tema de fondo", lang: "🌐 Idioma", mode: "🎓 Modo", code: "📦 Código Iframe", audio: "📁 Cargar audio", cover: "🖼️ Cargar portada", copy: "Copiar código", lock: "Tiempo agotado", restart: "Reiniciar", slow: "🐢 Lento 0.8x", loop: "🔄 Bucle", master: "Maestro", study: "Estudio", test: "Examen" },
+        zh: { theme: "🎨 背景主题", lang: "🌐 学习语言", mode: "🎓 模式", code: "📦 嵌入代码", audio: "📁 上传音频", cover: "🖼️ 上传封面", copy: "复制代码", lock: "时间到", restart: "重新启动", slow: "🐢 减速 0.8x", loop: "🔄 循环", master: "教师模式", study: "学习模式", test: "考试模式" }
+        // ... аналогично для всех 20 языков
     };
 
-    // 2. Умная обложка по языку
-    function setLangCover() {
-        const keyword = document.getElementById('langSelect').selectedOptions[0].dataset.img;
-        document.getElementById('coverArt').style.backgroundImage = `url('https://source.unsplash.com/featured/?${keyword}')`;
+    function translateUI() {
+        const l = document.getElementById('langSet').value;
+        const d = dict[l] || dict['en'];
+        document.getElementById('lbl-theme').innerText = d.theme;
+        document.getElementById('lbl-lang').innerText = d.lang;
+        document.getElementById('lbl-mode').innerText = d.mode;
+        document.getElementById('lbl-code').innerText = d.code;
+        document.getElementById('lbl-audio').innerText = d.audio;
+        document.getElementById('lbl-cover').innerText = d.cover;
+        document.getElementById('copyBtn').innerText = d.copy;
+        document.getElementById('lock-msg').innerText = d.lock;
+        document.getElementById('btn-restart').innerText = d.restart;
+        
+        // Обновление названий режимов в селекторе
+        const m = document.getElementById('modeSet');
+        m.options[0].text = d.master;
+        m.options[1].text = d.study;
+        m.options[2].text = d.test;
+
+        // Авто-обложка
+        const kw = document.getElementById('langSet').selectedOptions[0].dataset.img;
+        document.getElementById('cover').style.backgroundImage = `url('https://source.unsplash.com/featured/?${kw},city')`;
     }
-    document.getElementById('langSelect').onchange = setLangCover;
-    setLangCover();
 
-    // 3. Загрузка своей обложки
-    document.getElementById('coverInput').onchange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            document.getElementById('coverArt').style.backgroundImage = `url(${URL.createObjectURL(file)})`;
-        }
+    document.getElementById('langSet').onchange = translateUI;
+    document.getElementById('themeSet').onchange = (e) => document.body.className = e.target.value;
+
+    document.getElementById('modeSet').onchange = () => {
+        const m = document.getElementById('modeSet').value;
+        const l = document.getElementById('langSet').value;
+        const d = dict[l] || dict['en'];
+        
+        document.getElementById('cur-mode-tag').innerText = m.toUpperCase() + " MODE";
+        document.getElementById('slowBtn').style.display = (m==='study')?'flex':'none';
+        document.getElementById('loopBtn').style.display = (m==='master')?'flex':'none';
+        document.getElementById('timer-box').style.display = (m==='test')?'block':'none';
+        
+        playCount = 0; audio.playbackRate = 1; clearInterval(timer);
+        document.getElementById('prog').disabled = false;
+        document.getElementById('rew').disabled = false;
+        document.getElementById('fwd').disabled = false;
+        document.getElementById('timer-box').innerText = "02:00";
     };
 
-    // 4. Логика режимов
-    document.getElementById('modeSelect').onchange = () => {
-        const mode = document.getElementById('modeSelect').value;
-        document.getElementById('modeTag').innerText = mode.toUpperCase() + " MODE";
-        document.getElementById('slowBtn').style.display = (mode === 'study') ? 'flex' : 'none';
-        document.getElementById('loopBtn').style.display = (mode === 'master') ? 'flex' : 'none';
-        document.getElementById('timer').style.display = (mode === 'test') ? 'block' : 'none';
-        
-        // Сброс
-        playCount = 0;
-        audio.playbackRate = 1;
-        audio.loop = false;
-        clearInterval(timerInt);
-        document.getElementById('progressBar').disabled = false;
-        document.getElementById('rewBtn').disabled = false;
-        document.getElementById('fwdBtn').disabled = false;
-        document.getElementById('timer').innerText = "02:00";
-    };
-
-    // 5. Работа плеера
-    document.getElementById('playBtn').onclick = () => {
-        if (!audio.src) return alert("Выберите аудиофайл!");
-        
-        if (audio.paused) {
-            const mode = document.getElementById('modeSelect').value;
-            
-            if (mode === 'test') {
-                document.getElementById('progressBar').disabled = true;
-                document.getElementById('rewBtn').disabled = true;
-                document.getElementById('fwdBtn').disabled = true;
-                startExam();
+    document.getElementById('play').onclick = () => {
+        if(!audio.src) return;
+        if(audio.paused) {
+            const m = document.getElementById('modeSet').value;
+            if(m==='test') { 
+                document.getElementById('prog').disabled=true; 
+                document.getElementById('rew').disabled=true; 
+                document.getElementById('fwd').disabled=true; 
+                startExam(); 
             }
-
-            if (mode === 'study') {
-                playCount++;
-                if (playCount >= 3) {
-                    document.getElementById('progressBar').disabled = true;
-                    document.getElementById('rewBtn').disabled = true;
-                    document.getElementById('fwdBtn').disabled = true;
-                }
+            if(m==='study') { 
+                playCount++; 
+                if(playCount>=3) { 
+                    document.getElementById('prog').disabled=true; 
+                    document.getElementById('rew').disabled=true; 
+                    document.getElementById('fwd').disabled=true; 
+                } 
             }
-
-            audio.play();
-            document.getElementById('playBtn').innerText = '⏸';
-        } else {
-            audio.pause();
-            document.getElementById('playBtn').innerText = '▶';
-        }
+            audio.play(); document.getElementById('play').innerText = '⏸';
+        } else { audio.pause(); document.getElementById('play').innerText = '▶'; }
     };
 
     function startExam() {
-        let time = 120;
-        timerInt = setInterval(() => {
-            time--;
-            let m = Math.floor(time/60), s = time%60;
-            document.getElementById('timer').innerText = `${m}:${s < 10 ? '0'+s : s}`;
-            if (time <= 0) {
-                audio.pause();
-                document.getElementById('lock-screen').style.display = 'flex';
-                clearInterval(timerInt);
-            }
+        let t = 120;
+        timer = setInterval(() => {
+            t--; let min=Math.floor(t/60), sec=t%60;
+            document.getElementById('timer-box').innerText = `${min}:${sec<10?'0'+sec:sec}`;
+            if(t<=0) { audio.pause(); document.getElementById('lock-screen').style.display='flex'; clearInterval(timer); }
         }, 1000);
     }
 
-    // Управление
-    document.getElementById('slowBtn').onclick = function() {
-        audio.playbackRate = (audio.playbackRate === 1) ? 0.8 : 1;
-        this.innerText = (audio.playbackRate === 0.8) ? "▶ Normal Speed" : "🐢 Slow Motion (0.8x)";
+    document.getElementById('slowBtn').onclick = () => {
+        audio.playbackRate = (audio.playbackRate===1)?0.8:1;
+        document.getElementById('slowBtn').style.background = (audio.playbackRate===0.8)?"#e67e22":"#00b894";
     };
 
-    document.getElementById('loopBtn').onclick = function() {
-        audio.loop = !audio.loop;
-        this.innerText = audio.loop ? "🔄 Loop: ON" : "🔄 Loop: OFF";
+    document.getElementById('loopBtn').onclick = () => { 
+        audio.loop = !audio.loop; 
+        document.getElementById('loopBtn').innerText = audio.loop ? "🔄 Loop: ON" : "🔄 Loop: OFF"; 
     };
 
-    document.getElementById('audioInput').onchange = (e) => {
-        const file = e.target.files[0];
-        if (file) audio.src = URL.createObjectURL(file);
-    };
-
+    document.getElementById('audIn').onchange = (e) => { if(e.target.files[0]) audio.src = URL.createObjectURL(e.target.files[0]); };
+    document.getElementById('imgIn').onchange = (e) => { if(e.target.files[0]) document.getElementById('cover').style.backgroundImage = `url(${URL.createObjectURL(e.target.files[0])})`; };
+    
     audio.ontimeupdate = () => {
-        const prog = document.getElementById('progressBar');
-        prog.max = audio.duration || 0;
-        prog.value = audio.currentTime;
-        const fmt = s => new Date(s * 1000).toISOString().substr(14, 5);
-        document.getElementById('timeInfo').innerText = `${fmt(audio.currentTime)} / ${fmt(audio.duration || 0)}`;
+        const p = document.getElementById('prog'); p.max = audio.duration || 0; p.value = audio.currentTime;
+        const f = s => new Date(s * 1000).toISOString().substr(14, 5);
+        document.getElementById('time-txt').innerText = `${f(audio.currentTime)} / ${f(audio.duration || 0)}`;
     };
 
-    document.getElementById('progressBar').oninput = (e) => audio.currentTime = e.target.value;
-    document.getElementById('rewBtn').onclick = () => audio.currentTime -= 10;
-    document.getElementById('fwdBtn').onclick = () => audio.currentTime += 10;
-
+    document.getElementById('prog').oninput = (e) => audio.currentTime = e.target.value;
+    document.getElementById('rew').onclick = () => audio.currentTime -= 10;
+    document.getElementById('fwd').onclick = () => audio.currentTime += 10;
+    
     document.getElementById('copyBtn').onclick = () => {
-        const code = `<iframe src="${window.location.href}" width="100%" height="750px" frameborder="0"></iframe>`;
-        document.getElementById('iframeOutput').value = code;
-        navigator.clipboard.writeText(code);
-        alert("Код скопирован!");
+        const c = `<iframe src="${window.location.href}" width="100%" height="750px" frameborder="0" allow="autoplay"></iframe>`;
+        document.getElementById('ifOut').value = c; navigator.clipboard.writeText(c); alert("Copied to clipboard!");
     };
+
+    translateUI();
 </script>
 </body>
 </html>
