@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>AUDIO STUDIO PRO | DOUBLE DRAWER</title>
+    <title>AUDIO STUDIO PRO | MULTI-LAYER</title>
     <style>
         :root { 
             --gold-line: #d4af37;
@@ -11,149 +11,191 @@
             --text-main: #1a4a7a;
             --accent-gold: #b8860b;
         }
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--sidebar-bg); display: flex; height: 100vh; overflow: hidden; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--sidebar-bg); display: flex; height: 100vh; overflow: hidden; color: var(--text-main); }
 
-        /* ОСНОВНАЯ ЗОНА ПЛЕЕРА */
+        /* ЗОНА ПЛЕЕРА */
         .player-zone { 
             flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; 
             background: radial-gradient(circle at 30% 20%, #ffffff 0%, #f4faff 45%, #eef8ff 100%);
-            transition: margin-right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: margin-right 0.4s ease;
         }
         body.dict-open .player-zone { margin-right: 500px; }
-        body.mat-open .player-zone { margin-right: 530px; } /* Чуть больше для эффекта слоев */
+        body.mat-open .player-zone { margin-right: 530px; }
 
-        /* ШТОРКА 1: СЛОВАРЬ (НИЖНЯЯ) */
-        .drawer-dict { 
-            position: fixed; right: -505px; top: 0; width: 500px; height: 100%; 
-            background: white; border-left: 3px solid var(--gold-line); 
-            transition: right 0.4s ease; z-index: 100; box-shadow: -5px 0 15px rgba(0,0,0,0.05);
-        }
+        /* ШТОРКИ */
+        .drawer { position: fixed; right: -515px; top: 0; width: 500px; height: 100%; background: white; transition: right 0.4s ease; box-shadow: -10px 0 25px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
+        .drawer-dict { z-index: 100; border-left: 3px solid var(--gold-line); }
+        .drawer-mat { z-index: 110; border-left: 4px solid #5da9e1; }
+        
         body.dict-open .drawer-dict { right: 0; }
-
-        /* ШТОРКА 2: МАТЕРИАЛЫ (ВЕРХНЯЯ) */
-        .drawer-mat { 
-            position: fixed; right: -515px; top: 0; width: 500px; height: 100%; 
-            background: #fdfdfd; border-left: 4px solid var(--accent-gold); 
-            transition: right 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.1); z-index: 110; 
-            box-shadow: -10px 0 25px rgba(0,0,0,0.15); display: flex; flex-direction: column; padding: 5px;
-        }
         body.mat-open .drawer-mat { right: 0; }
 
-        /* КНОПКИ УПРАВЛЕНИЯ ШТОРКАМИ */
+        /* КНОПКИ ШТОРОК */
         .drawer-triggers { position: fixed; right: 0; top: 40%; display: flex; flex-direction: column; gap: 10px; z-index: 120; }
-        .t-btn { 
-            width: 45px; height: 60px; border: none; border-radius: 12px 0 0 12px; 
-            cursor: pointer; color: white; font-size: 1.4rem; display: flex; align-items: center; justify-content: center;
-            box-shadow: -2px 2px 5px rgba(0,0,0,0.1); transition: width 0.2s;
-        }
-        .t-btn:hover { width: 55px; }
+        .t-btn { width: 45px; height: 60px; border: none; border-radius: 12px 0 0 12px; cursor: pointer; color: white; font-size: 1.4rem; transition: 0.2s; }
         .t-dict { background: var(--gold-grad); }
         .t-mat { background: #5da9e1; }
 
         /* ЛЕВАЯ ПАНЕЛЬ */
-        .sidebar-left { width: 300px; border-right: 1px solid #ddd; padding: 20px; display: flex; flex-direction: column; gap: 15px; background: white; z-index: 10; }
-        .card { border: 2px solid var(--gold-line); border-radius: 15px; padding: 10px; background: #fff; }
-        label { font-size: 0.7rem; font-weight: 900; color: var(--accent-gold); display: block; margin-bottom: 5px; }
+        .sidebar-left { width: 310px; border-right: 1px solid #ddd; padding: 20px; display: flex; flex-direction: column; gap: 12px; background: white; z-index: 10; overflow-y: auto; }
+        .card { border: 2px solid var(--gold-line); border-radius: 15px; padding: 10px; margin-bottom: 5px; }
+        label { font-size: 0.7rem; font-weight: 900; color: var(--accent-gold); display: block; margin-bottom: 4px; text-transform: uppercase; }
         .input-row { display: flex; align-items: center; gap: 5px; background: #f9f9f9; padding: 5px 10px; border-radius: 8px; border: 1px solid #eee; margin-bottom: 5px; }
-        input { border: none; background: transparent; width: 100%; outline: none; font-size: 0.85rem; font-weight: bold; }
+        input, select { border: none; background: transparent; width: 100%; outline: none; font-size: 0.85rem; font-weight: bold; color: var(--text-main); }
 
-        /* ПЛЕЕР СТИЛИ */
-        .cover { width: 400px; height: 225px; border-radius: 20px; border: 3px solid var(--gold-line); margin-bottom: 20px; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-size: 4rem; background-color: white; }
-        .play-btn { width: 80px; height: 80px; border-radius: 50%; background: var(--gold-grad); border: none; color: white; font-size: 2rem; cursor: pointer; }
-        .nav-btn { background: none; border: none; font-size: 3rem; color: var(--text-main); cursor: pointer; }
-        .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 80%; margin-top: 30px; }
+        /* ИНТЕРФЕЙС ПЛЕЕРА */
+        .cover { width: 400px; height: 225px; border-radius: 20px; border: 3px solid var(--gold-line); margin-bottom: 15px; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-size: 4rem; background-color: white; }
+        .play-btn { width: 80px; height: 80px; border-radius: 50%; background: var(--gold-grad); border: none; color: white; font-size: 2.2rem; cursor: pointer; }
+        .nav-btn { background: none; border: none; font-size: 3.5rem; color: var(--text-main); cursor: pointer; }
+        .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 85%; margin-top: 20px; }
+        
+        iframe { width: 100%; height: 100%; border: none; }
+        .x-btn { color: #ff8e8e; border: none; background: none; cursor: pointer; font-weight: bold; }
     </style>
 </head>
-<body>
+<body class="dict-open">
 
 <div class="drawer-triggers">
-    <button class="t-btn t-dict" title="Словарь" onclick="document.body.classList.toggle('dict-open')">📖</button>
-    <button class="t-btn t-mat" title="Материалы" onclick="document.body.classList.toggle('mat-open')">📂</button>
+    <button class="t-btn t-dict" onclick="document.body.classList.toggle('dict-open')">📖</button>
+    <button class="t-btn t-mat" onclick="document.body.classList.toggle('mat-open')">📂</button>
 </div>
 
 <div class="sidebar-left">
     <div style="text-align:center"><img src="https://irinschensmagen-alt.github.io/Audioplayer-Studio-Pro/logo.png" style="width:60px"></div>
     
-    <div class="card"><label>LANGUAGE</label><select id="langSelect" style="width:100%; border:none; font-weight:bold;"></select></div>
+    <div class="card">
+        <label id="l-lang">Language</label>
+        <select id="langSelect" onchange="changeLang()"></select>
+    </div>
 
     <div class="card">
-        <label>MATERIALS SOURCE</label>
-        <div class="input-row"><input type="text" id="u-mat" placeholder="Link" onkeypress="if(event.key==='Enter') setMatLink(this.value)"> 🔗</div>
+        <label id="l-mat">Materials</label>
+        <div class="input-row">
+            <input type="text" id="u-mat" placeholder="Link" onkeypress="if(event.key==='Enter') setMat(this.value)">
+            <button class="x-btn" onclick="clearMat()">✖</button>
+        </div>
         <div class="input-row" style="position:relative; cursor:pointer;">
-            <input type="file" id="f-mat" style="position:absolute; opacity:0; cursor:pointer" onchange="handleMatFile(this)">
-            <span id="f-mat-name" style="font-size:0.8rem; color:#78a1c4">📁 Загрузить файл</span>
+            <input type="file" id="f-mat" style="position:absolute; opacity:0; width:100%; cursor:pointer" onchange="handleFile(this, 'mat')">
+            <span id="f-mat-name">📁</span>
         </div>
     </div>
 
-    <div class="card"><label>MODE</label><select id="modeSelect" style="width:100%; border:none; font-weight:bold;"></select></div>
-    
     <div class="card">
-        <label>DICTIONARY URL</label>
-        <div class="input-row"><input type="text" id="u-dict" value="https://www.wiktionary.org/" oninput="syncDict(this.value)"></div>
+        <label id="l-mode">Mode</label>
+        <select id="modeSelect">
+            <option value="study" id="opt-study">Study</option>
+            <option value="master" id="opt-master">Master</option>
+            <option value="test" id="opt-test">Test</option>
+        </select>
+    </div>
+
+    <div class="card">
+        <label id="l-dict">Dictionary URL</label>
+        <div class="input-row">
+            <input type="text" id="u-dict" oninput="updateDict(this.value)">
+            <button class="x-btn" onclick="resetDict()">✖</button>
+        </div>
     </div>
 </div>
 
-<div class="drawer-dict">
-    <iframe id="dict-frame" src="https://www.wiktionary.org/" style="width:100%; height:100%; border:none;"></iframe>
-</div>
-
-<div class="drawer-mat">
-    <div style="padding:10px; background:var(--gold-grad); color:white; font-weight:bold; display:flex; justify-content:space-between;">
-        <span>УЧЕБНЫЕ МАТЕРИАЛЫ</span>
-        <button onclick="document.body.classList.remove('mat-open')" style="background:none; border:none; color:white; cursor:pointer; font-weight:bold;">✕</button>
-    </div>
-    <iframe id="mat-frame" style="width:100%; flex:1; border:none; background:white;"></iframe>
-</div>
+<div class="drawer drawer-dict"><iframe id="dict-frame"></iframe></div>
+<div class="drawer drawer-mat"><iframe id="mat-frame"></iframe></div>
 
 <div class="player-zone">
     <div class="cover" id="cover">♫</div>
     <input type="range" id="prog" style="width:400px; accent-color:var(--gold-line); margin-bottom:15px;">
     
     <div style="display:flex; align-items:center; gap:40px;">
-        <button class="nav-btn" onclick="rewind(-10)">⏪</button>
-        <button class="play-btn" id="play-btn" onclick="togglePlay()">▶</button>
-        <button class="nav-btn" onclick="rewind(10)">⏩</button>
+        <button class="nav-btn">⏪</button>
+        <button class="play-btn" id="play-btn">▶</button>
+        <button class="nav-btn">⏩</button>
     </div>
 
     <div class="grid-inputs">
-        <div class="card"><label>AUDIO SOURCE</label>
-            <div class="input-row"><input type="text" id="u-aud" placeholder="Link"> 🔗</div>
+        <div class="card"><label id="l-aud">Audio</label>
+            <div class="input-row"><input type="text" placeholder="Link">🔗</div>
         </div>
-        <div class="card"><label>IMAGE SOURCE</label>
-            <div class="input-row"><input type="text" id="u-img" placeholder="Link"> 🔗</div>
+        <div class="card"><label id="l-img">Image</label>
+            <div class="input-row"><input type="text" placeholder="Link">🔗</div>
         </div>
     </div>
 </div>
 
 <script>
-    const audio = new Audio();
+    const DEFAULT_DICT = "https://www.wiktionary.org/";
     
-    // Логика шторки материалов
-    function setMatLink(u) {
-        document.getElementById('mat-frame').src = u;
-        document.body.classList.add('mat-open');
+    const languages = {
+        ru: { name: "Русский", lang: "Язык", mat: "Материалы", mode: "Режим", dict: "Словарь URL", study: "Ученик", master: "Мастер", test: "Тест", aud: "Аудио", img: "Картинка" },
+        en: { name: "English", lang: "Language", mat: "Materials", mode: "Mode", dict: "Dictionary URL", study: "Study", master: "Master", test: "Test", aud: "Audio", img: "Image" },
+        ja: { name: "日本語", lang: "言語", mat: "教材", mode: "モード", dict: "辞書URL", study: "学習", master: "マスター", test: "テスト", aud: "音声", img: "画像" },
+        zh: { name: "中文", lang: "语言", mat: "材料", mode: "模式", dict: "词典URL", study: "学习", master: "大师", test: "测试", aud: "音频", img: "图片" },
+        pt: { name: "Português", lang: "Idioma", mat: "Materiais", mode: "Modo", dict: "Dicionário URL", study: "Estudo", master: "Mestre", test: "Teste", aud: "Áudio", img: "Imagem" },
+        ar: { name: "العربية", lang: "اللغة", mat: "المواد", mode: "الوضع", dict: "قاموس URL", study: "دراسة", master: "ماستر", test: "اختبار", aud: "صوت", img: "صورة" },
+        hi: { name: "हिन्दी", lang: "भाषा", mat: "सामग्री", mode: "मोड", dict: "शब्दकोश URL", study: "अध्ययन", master: "मास्टर", test: "परीक्षा", aud: "ऑडियो", img: "चित्र" },
+        fa: { name: "فارسی", lang: "زبان", mat: "مواد", mode: "حالت", dict: "لینک دیکشنری", study: "مطالعه", master: "استاد", test: "تست", aud: "صوتی", img: "تصویر" },
+        fr: { name: "Français", lang: "Langue", mat: "Matériels", mode: "Mode", dict: "URL Dictionnaire", study: "Étude", master: "Maître", test: "Test", aud: "Audio", img: "Image" },
+        es: { name: "Español", lang: "Idioma", mat: "Materiales", mode: "Modo", dict: "URL Diccionario", study: "Estudio", master: "Maestro", test: "Prueba", aud: "Audio", img: "Imagen" },
+        it: { name: "Italiano", lang: "Lingua", mat: "Materiali", mode: "Modo", dict: "URL Dizionario", study: "Studio", master: "Master", test: "Test", aud: "Audio", img: "Immagine" }
+    };
+
+    function changeLang() {
+        const ln = document.getElementById('langSelect').value;
+        const t = languages[ln];
+        document.getElementById('l-lang').innerText = t.lang;
+        document.getElementById('l-mat').innerText = t.mat;
+        document.getElementById('l-mode').innerText = t.mode;
+        document.getElementById('l-dict').innerText = t.dict;
+        document.getElementById('l-aud').innerText = t.aud;
+        document.getElementById('l-img').innerText = t.img;
+        document.getElementById('opt-study').innerText = t.study;
+        document.getElementById('opt-master').innerText = t.master;
+        document.getElementById('opt-test').innerText = t.test;
     }
 
-    function handleMatFile(i) {
-        if(i.files[0]) {
-            const u = URL.createObjectURL(i.files[0]);
+    function updateDict(val) {
+        let target = val.trim() === "" ? DEFAULT_DICT : (val.startsWith('http') ? val : 'https://' + val);
+        document.getElementById('dict-frame').src = target;
+    }
+
+    function resetDict() {
+        document.getElementById('u-dict').value = "";
+        updateDict("");
+    }
+
+    function setMat(u) {
+        if(u) {
             document.getElementById('mat-frame').src = u;
-            document.getElementById('f-mat-name').innerText = i.files[0].name;
             document.body.classList.add('mat-open');
         }
     }
 
-    function syncDict(v) {
-        document.getElementById('dict-frame').src = v.startsWith('http') ? v : 'https://'+v;
+    function clearMat() {
+        document.getElementById('u-mat').value = "";
+        document.getElementById('mat-frame').src = "about:blank";
     }
 
-    function togglePlay() {
-        if(!audio.src) return;
-        audio.paused ? audio.play() : audio.pause();
+    function handleFile(input, type) {
+        if(input.files[0]) {
+            const url = URL.createObjectURL(input.files[0]);
+            if(type === 'mat') {
+                document.getElementById('mat-frame').src = url;
+                document.getElementById('f-mat-name').innerText = input.files[0].name;
+                document.body.classList.add('mat-open');
+            }
+        }
     }
-    
-    audio.onplay = () => document.getElementById('play-btn').innerText = '⏸';
-    audio.onpause = () => document.getElementById('play-btn').innerText = '▶';
+
+    // Инициализация
+    const sel = document.getElementById('langSelect');
+    Object.keys(languages).forEach(code => {
+        let opt = new Option(languages[code].name, code);
+        sel.add(opt);
+    });
+    sel.value = 'ru';
+    document.getElementById('u-dict').value = DEFAULT_DICT;
+    updateDict(DEFAULT_DICT);
+    changeLang();
 </script>
+
 </body>
 </html>
