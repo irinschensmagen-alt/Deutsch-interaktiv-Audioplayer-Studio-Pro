@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AUDIO STUDIO PRO | DICT SIDEBAR</title>
+    <title>AUDIO STUDIO PRO | PERFECT SYMMETRY</title>
     <style>
         :root { 
             --gold-line: #d4af37;
@@ -21,7 +21,6 @@
         .player-zone { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: var(--chameleon); transition: margin-right 0.4s ease; position: relative; }
         body.dict-open .player-zone { margin-right: 500px; }
 
-        /* ШТОРКА СПРАВА */
         .sidebar-right { 
             position: fixed; right: -505px; top: 0; width: 500px; height: 100%; 
             background: white; border-left: 3px solid var(--gold-line); 
@@ -47,15 +46,20 @@
         .file-custom-text { font-size: 0.85rem; font-weight: 700; color: #78a1c4; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         .x-btn { color: #ff8e8e; border: none; background: none; font-weight: 900; cursor: pointer; font-size: 1.3rem; z-index: 6; }
+        .ok-btn { color: var(--gold-line); border: none; background: none; font-weight: 900; cursor: pointer; font-size: 0.9rem; }
 
         .cover { width: 80%; max-width: 500px; aspect-ratio: 16/9; border-radius: 25px; background: white; border: 3px solid var(--gold-line); display: flex; align-items: center; justify-content: center; font-size: 5rem; margin-bottom: 10px; background-size: cover; background-position: center; }
-        .time { font-weight: 800; font-size: 2.2rem; margin: 10px 0; }
+        .time { font-weight: 800; font-size: 2.2rem; margin: 10px 0; font-variant-numeric: tabular-nums; }
         #prog { width: 80%; max-width: 500px; accent-color: var(--gold-line); cursor: pointer; height: 12px; }
+        
+        /* КНОПКИ ПЛЕЕРА - СИММЕТРИЧНЫЕ */
         .play-btn { width: 90px; height: 90px; border-radius: 50%; background: var(--gold-grad); color: white; border: none; font-size: 2.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .nav-btn { background: none; border: none; color: var(--text-main); font-size: 3.5rem; cursor: pointer; }
+        .nav-btn { background: none; border: none; color: var(--text-main); font-size: 3.5rem; cursor: pointer; opacity: 1 !important; transition: transform 0.2s; }
+        .nav-btn:hover { transform: scale(1.1); color: var(--gold-line); }
 
         #lock-screen { position: absolute; inset: 0; background: rgba(255,255,255,0.98); display:none; flex-direction:column; align-items:center; justify-content:center; z-index:9999; border-radius: 20px; }
         iframe { flex: 1; border: 2px solid var(--gold-line); border-radius: 12px; margin-top: 10px; background: #fff; }
+        .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 90%; max-width: 850px; margin-top: 25px; }
     </style>
 </head>
 <body class="dict-open">
@@ -64,8 +68,8 @@
 
 <div class="sidebar-left">
     <div style="text-align: center; margin-bottom: 10px;">
-        <img src="https://irinschensmagen-alt.github.io/Audioplayer-Studio-Pro/logo.png" style="width:75px; border-radius:50%; border:3px solid var(--gold-line);">
-        <div style="color:var(--accent-gold); font-weight:900; font-size:1rem; margin-top:10px;">AUDIO STUDIO PRO</div>
+        <img src="https://irinschensmagen-alt.github.io/Audioplayer-Studio-Pro/logo.png" style="width:70px; border-radius:50%; border:3px solid var(--gold-line);">
+        <div style="color:var(--accent-gold); font-weight:900; font-size:1rem; margin-top:5px;">AUDIO STUDIO PRO</div>
     </div>
     
     <div class="card"><label id="l-lang">LANGUAGE</label><select id="langSelect" onchange="translateUI()"></select></div>
@@ -98,7 +102,7 @@
 </div>
 
 <div class="sidebar-right">
-    <label style="margin-bottom:10px;">ONLINE DICTIONARY</label>
+    <label id="l-dict-title" style="margin-bottom:10px; font-weight:900; color:var(--accent-gold);">DICTIONARY</label>
     <iframe id="dict-frame" src="https://www.wiktionary.org/"></iframe>
 </div>
 
@@ -114,8 +118,9 @@
         <button class="nav-btn" id="ff-btn" onclick="rewind(10)">⏩</button>
     </div>
     
-    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; width:90%; max-width:850px; margin-top:25px;">
+    <div class="grid-inputs">
         <div class="card"><label id="l-al">AUDIO</label>
+            <div class="input-row"><input type="text" id="u-aud" placeholder="Link" onkeypress="if(event.key==='Enter') setAudioLink(this.value)"><button class="ok-btn" onclick="setAudioLink(document.getElementById('u-aud').value)">OK</button><button class="x-btn" onclick="clearF('u-aud')">✖</button></div>
             <div class="input-row file-wrapper">
                 <input type="file" id="f-aud" class="file-input" accept="audio/*" onchange="handleFile(this)">
                 <span class="file-custom-text" id="f-aud-btn"></span>
@@ -123,6 +128,7 @@
             </div>
         </div>
         <div class="card"><label id="l-il">IMAGE</label>
+            <div class="input-row"><input type="text" id="u-img" placeholder="Link" onkeypress="if(event.key==='Enter') setI(this.value)"><button class="ok-btn" onclick="setI(document.getElementById('u-img').value)">OK</button><button class="x-btn" onclick="clearF('u-img')">✖</button></div>
             <div class="input-row file-wrapper">
                 <input type="file" id="f-img" class="file-input" accept="image/*" onchange="handleFile(this)">
                 <span class="file-custom-text" id="f-img-btn"></span>
@@ -143,8 +149,8 @@
         de: { name: "Deutsch", lang: "SPRACHE", mode: "MODUS", slow: "LANGSAM 0.8x", materials: "MATERIALIEN", al: "AUDIO", il: "BILD", study: "Lernen", master: "Master", test: "Test", select: "Datei wählen", nofile: "Keine Datei", dict: "Wörterbuch URL", timeup: "ZEIT ABGELAUFEN" },
         ja: { name: "日本語", lang: "言語", mode: "モード", slow: "スロー 0.8x", materials: "教材", al: "オーディオ", il: "画像", study: "学習", master: "マスター", test: "テスト", select: "選択", nofile: "未選択", dict: "辞書URL", timeup: "時間切れ" },
         zh: { name: "中文", lang: "语言", mode: "模式", slow: "慢放 0.8x", materials: "材料", al: "音频", il: "图片", study: "学习", master: "大师", test: "测试", select: "选择", nofile: "未选择", dict: "词典URL", timeup: "时间到" },
-        pt: { name: "Português", lang: "IDIOMA", mode: "MODO", slow: "LENTO 0.8x", materials: "MATERIAIS", al: "ÁUDIO", il: "IMAGEM", study: "Estudo", master: "Mestre", test: "Teste", select: "Escolher", nofile: "Nenhum arquivo", dict: "URL Dicionário", timeup: "TEMPO ESGOTADO" },
-        hi: { name: "हिन्दी", lang: "भाषा", mode: "मोड", slow: "धीमी गति 0.8x", materials: "सामग्री", al: "ऑडियो", il: "छवि", study: "अध्ययन", master: "मास्टर", test: "परीक्षा", select: "चुनें", nofile: "कोई फ़ाइल नहीं", dict: "शब्दकोش URL", timeup: "समय समाप्त" },
+        pt: { name: "Português", lang: "IDIOMA", mode: "MODO", slow: "LENTO 0.8x", materials: "MATERIAIS", al: "ÁUDIO", il: "IMAGEM", study: "Estudo", master: "Mestre", test: "Teste", select: "Escolher", nofile: "Nенум arquivo", dict: "URL Dicionário", timeup: "TEMPO ESGOTADO" },
+        hi: { name: "हिन्दी", lang: "भाषा", mode: "मोड", slow: "धीमी गति 0.8x", materials: "सामग्री", al: "ऑडियो", il: "छви", study: "अध्ययन", master: "मास्टर", test: "परीक्षा", select: "चुनें", nofile: "कोई फ़айл नहीं", dict: "शब्दкош URL", timeup: "समय समाप्त" },
         ar: { name: "العربية", lang: "اللغة", mode: "الوضع", slow: "بطيء 0.8x", materials: "المواد", al: "صوت", il: "صورة", study: "دراسة", master: "ماستر", test: "اختبار", select: "اختر", nofile: "لا يوجد ملف", dict: "رابط القاموس", timeup: "انتهى الوقت" },
         fa: { name: "فارسی", lang: "زبان", mode: "حالت", slow: "آهسته 0.8x", materials: "مواد", al: "صوتی", il: "تصویر", study: "مطالعه", master: "استاد", test: "تست", select: "انتخاب", nofile: "فایلی نیست", dict: "لینک دیکشنری", timeup: "زمان تمام شد" },
         da: { name: "دری", lang: "زبان", mode: "حالت", slow: "آهسته 0.8x", materials: "مواد", al: "صوتی", il: "تصویر", study: "مطالعه", master: "استاد", test: "تست", select: "انتخاب", nofile: "فایلی نیست", dict: "لینک دیکشنری", timeup: "زمان تمام شد" },
@@ -159,14 +165,19 @@
 
     function translateUI() {
         const t = langs[sel.value] || langs.ru;
-        ['lang','mode','slow','materials','al','il'].forEach(id => document.getElementById('l-'+id).innerText = t[id]);
+        ['lang','mode','slow','materials','al','il'].forEach(id => {
+            const el = document.getElementById('l-'+id);
+            if(el) el.innerText = t[id];
+        });
         ['study','master','test'].forEach(m => document.getElementById('opt-'+m).innerText = t[m]);
         document.getElementById('l-dict-label').innerText = t.dict;
+        document.getElementById('l-dict-title').innerText = t.dict.replace(' URL','');
         document.getElementById('lock-msg').innerText = t.timeup;
+        
         ['f-univ','f-aud','f-img'].forEach(id => {
             const btn = document.getElementById(id+'-btn');
             const inp = document.getElementById(id);
-            btn.innerText = inp.files[0] ? "📄 " + inp.files[0].name : "📁 " + t.nofile + " / " + t.select;
+            if(btn && inp) btn.innerText = inp.files[0] ? "📄 " + inp.files[0].name : "📁 " + t.nofile + " / " + t.select;
         });
     }
 
@@ -176,22 +187,27 @@
         document.getElementById('dict-frame').src = url;
     }
 
-    function clearF(id) {
-        const inp = document.getElementById(id);
-        if(inp) inp.value = '';
-        if(id.includes('aud')) { audio.pause(); audio.src = ''; }
-        if(id.includes('img')) setI('');
-        if(id === 'u-dict') document.getElementById('dict-frame').src = 'about:blank';
-        translateUI();
-    }
-
     function handleFile(input) {
         if (input.files[0]) {
             const url = URL.createObjectURL(input.files[0]);
-            if(input.id === 'f-aud') { audio.src = url; audio.load(); }
+            if(input.id === 'f-aud') { audio.src = url; audio.load(); playCount = 0; }
             if(input.id === 'f-img') setI(url);
             translateUI();
         }
+    }
+
+    function setAudioLink(url) { if(!url) return; audio.src = url; audio.load(); audio.play(); playCount = 0; }
+
+    function clearF(id) {
+        const inp = document.getElementById(id);
+        if(inp) inp.value = '';
+        if(id === 'f-aud' || id === 'u-aud') { audio.pause(); audio.src = ''; }
+        if(id === 'f-img' || id === 'u-img') setI('');
+        if(id === 'u-dict') {
+            document.getElementById('u-dict').value = 'https://www.wiktionary.org/';
+            syncDict('https://www.wiktionary.org/');
+        }
+        translateUI();
     }
 
     function initMode() {
@@ -199,7 +215,8 @@
         document.getElementById('lock-screen').style.display = 'none';
         clearInterval(testTimer);
         const isT = (m === 'test');
-        document.getElementById('ff-btn').style.opacity = isT ? '0.2' : '1';
+        // УБРАЛ ИЗМЕНЕНИЕ ПРОЗРАЧНОСТИ: ТЕПЕРЬ ВСЕГДА 1
+        document.getElementById('ff-btn').style.opacity = '1';
         if(isT) {
             let s = 120;
             testTimer = setInterval(() => { if(!audio.paused) s--; if(s<=0) { audio.pause(); document.getElementById('lock-screen').style.display='flex'; clearInterval(testTimer); } }, 1000);
@@ -209,7 +226,7 @@
     function togglePlay() { if(!audio.src) return; audio.paused ? audio.play() : audio.pause(); if(document.getElementById('modeSelect').value==='study' && audio.paused) playCount++; }
     function rewind(v) { if(document.getElementById('modeSelect').value==='test' || (v>0 && playCount>2)) return; audio.currentTime += v; }
     function manualSeek(v) { if(document.getElementById('modeSelect').value !== 'test') audio.currentTime = v; }
-    function toggleSlow() { audio.playbackRate = audio.playbackRate === 1 ? 0.8 : 1; document.getElementById('slowBtn').style.background = audio.playbackRate === 0.8 ? 'var(--gold-grad)' : '#5da9e1'; }
+    function toggleSlow() { audio.playbackRate = (audio.playbackRate === 1) ? 0.8 : 1; document.getElementById('slowBtn').style.background = (audio.playbackRate === 0.8) ? 'var(--gold-grad)' : '#5da9e1'; }
     function setI(u) { const c = document.getElementById('cover'); c.style.backgroundImage = u ? `url(${u})` : 'none'; c.innerText = u ? '' : '♫'; }
 
     audio.ontimeupdate = () => {
