@@ -2,13 +2,17 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>AUDIO STUDIO PRO | GENIALLY STABLE</title>
+    <title>AUDIO STUDIO PRO | FINAL GENIALLY EDITION</title>
     <style>
-        :root { --gold: #d4af37; --gold-l: #fdfaf0; --blue: #0078d4; --dark: #1a4a7a; --bg: #fcfdfe; --red: #e11d48; }
+        :root { 
+            --gold: #d4af37; --gold-l: #fdfaf0; --blue: #0078d4; 
+            --dark: #1a4a7a; --bg: #fcfdfe; --red: #e11d48; 
+        }
         body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; display: flex; height: 100vh; background: var(--bg); overflow: hidden; color: var(--dark); font-size: 15px; }
 
+        /* САЙДБАР */
         .sidebar { width: 340px; border-right: 1px solid #e2e8f0; background: white; display: flex; flex-direction: column; padding: 20px; flex-shrink: 0; z-index: 1000; }
-        .card { border: 2px solid var(--gold-l); border-radius: 12px; padding: 12px; margin-bottom: 10px; background: white; }
+        .card { border: 2px solid var(--gold-l); border-radius: 12px; padding: 12px; margin-bottom: 10px; background: white; position: relative; }
         label { font-size: 11px; font-weight: 800; color: var(--gold); text-transform: uppercase; margin-bottom: 6px; display: block; }
         
         .inp-group { background: #f8fafc; border-radius: 8px; padding: 5px 10px; display: flex; align-items: center; gap: 5px; border: 1.5px solid #f1f5f9; }
@@ -17,11 +21,12 @@
         .btn-in { background: none; border: none; cursor: pointer; color: #94a3b8; font-size: 14px; }
         .btn-clear:hover { color: var(--red); }
 
+        /* ФАЙЛЫ И КРЕСТИКИ */
         .file-box { display: flex; align-items: center; gap: 5px; margin-top: 5px; }
-        .file-link { font-size: 11px; color: var(--blue); cursor: pointer; font-weight: 700; }
+        .file-link { font-size: 11px; color: var(--blue); cursor: pointer; font-weight: 700; text-decoration: none; }
         .x-min { color: var(--red); cursor: pointer; font-weight: bold; font-size: 11px; padding: 0 4px; }
 
-        /* ИСПРАВЛЕННОЕ БЕЛОЕ ОКНО ВЫВОДА */
+        /* БЕЛОЕ ОКНО ВЫВОДА КОДА */
         .export-box { margin-top: auto; padding-top: 10px; }
         .code-res { 
             width: 100%; height: 95px; font-family: 'Consolas', monospace; font-size: 11px; 
@@ -32,7 +37,7 @@
         .copy-btn { width: 100%; background: var(--gold); color: white; border: none; padding: 14px; border-radius: 10px; cursor: pointer; font-weight: 800; margin-top: 8px; font-size: 14px; }
 
         /* ШТОРКИ */
-        .drawer { position: fixed; right: -605px; top: 0; width: 600px; height: 100%; background: white; transition: 0.4s; z-index: 500; border-left: 8px solid var(--gold); box-shadow: -10px 0 30px rgba(0,0,0,0.05); }
+        .drawer { position: fixed; right: -605px; top: 0; width: 600px; height: 100%; background: white; transition: 0.4s ease; z-index: 500; border-left: 8px solid var(--gold); box-shadow: -10px 0 30px rgba(0,0,0,0.05); }
         body.dict-open .drawer { right: 0; }
         body.mat-open .drawer { right: 0; border-left-color: var(--blue); }
 
@@ -57,7 +62,9 @@
 
 <aside class="sidebar">
     <div style="text-align:center; margin-bottom:10px;"><img src="https://irinschensmagen-alt.github.io/Audioplayer-Studio-Pro/logo.png" width="50"></div>
+    
     <div class="card"><label id="l-lang">Sprache</label><select id="langSel" onchange="updateUI()"></select></div>
+    
     <div class="card">
         <label id="l-mat">Materialien</label>
         <div class="inp-group">
@@ -65,10 +72,16 @@
             <button class="btn-in btn-clear" onclick="clr('u-mat')">✕</button>
             <button class="btn-in" onclick="loadSide('mat')">📎</button>
         </div>
-        <div class="file-box"><span class="file-link">📁 <span id="f-mat-txt">Datei wählen</span></span><span class="x-min" onclick="clrTxt('f-mat-txt')">✕</span></div>
+        <div class="file-box">
+            <span class="file-link">📁 <span id="f-mat-txt">Datei wählen</span></span>
+            <span class="x-min" onclick="clrTxt('f-mat-txt')">✕</span>
+        </div>
     </div>
+
     <div class="card"><label id="l-mode">Modus</label><select id="modeSel" onchange="gen()"></select></div>
+    
     <button id="l-slow-btn" style="width:100%; background:var(--blue); color:white; border:none; padding:12px; border-radius:12px; font-weight:800; margin-bottom:10px; cursor:pointer; font-size:13px;">🐢 Tempo 0.8x</button>
+
     <div class="card">
         <label id="l-dict">Wörterbuch</label>
         <div class="inp-group">
@@ -77,9 +90,10 @@
             <button class="btn-in" onclick="loadSide('dict')">📎</button>
         </div>
     </div>
+
     <div class="export-box">
-        <label style="color:var(--gold); font-size: 10px;">IFRAME FOR GENIALLY</label>
-        <textarea id="res-code" class="code-res" readonly placeholder="Код появится здесь..."></textarea>
+        <label style="color:var(--gold); font-size: 10px;">IFRAME CODE FOR GENIALLY</label>
+        <textarea id="res-code" class="code-res" readonly placeholder="Enter Audio link to generate code..."></textarea>
         <button class="copy-btn" onclick="copyC()">Copy Code</button>
     </div>
 </aside>
@@ -144,9 +158,9 @@
         if(!aud) { document.getElementById('res-code').value = ""; return; }
 
         const p = new URLSearchParams({ aud, img, mode, lang, dict, mat }).toString();
-        // СТРОГО ОДНА СТРОКА ДЛЯ GENIALLY
-        const iframeStr = '<iframe src="https://studio-player.pro/?' + p + '" width="100%" height="750" frameborder="0" allow="autoplay; fullscreen" allowfullscreen="true" style="border:0; width:1px; min-width:100%;"></iframe>';
-        document.getElementById('res-code').value = iframeStr;
+        // ГЕНЕРАЦИЯ СТРОГО В ОДНУ СТРОКУ ДЛЯ GENIALLY
+        const code = '<iframe src="https://studio-player.pro/?' + p + '" width="100%" height="750" frameborder="0" allow="autoplay; fullscreen" allowfullscreen="true" style="border:0; width:1px; min-width:100%;"></iframe>';
+        document.getElementById('res-code').value = code;
     }
 
     function toggleD(type) {
