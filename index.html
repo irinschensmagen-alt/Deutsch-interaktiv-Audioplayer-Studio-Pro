@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AUDIO STUDIO PRO | FINAL HARMONY</title>
+    <title>AUDIO STUDIO PRO | DICTIONARY FIXED</title>
     <style>
         :root { 
             --gold-line: #d4af37;
@@ -23,7 +23,7 @@
         .player-zone { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: var(--chameleon); transition: all 0.4s ease; }
         body.dict-open .player-zone { margin-right: 500px; }
 
-        /* DICTIONARY SIDEBAR */
+        /* RIGHT SIDEBAR (DICTIONARY) */
         .sidebar-right { 
             position: fixed; right: -505px; top: 0; width: 500px; height: 100%; 
             background: white; border-left: 3px solid var(--gold-line); 
@@ -39,16 +39,9 @@
             box-shadow: -2px 0 10px rgba(0,0,0,0.1); font-size: 1.2rem;
         }
 
-        /* UI ELEMENTS */
-        .cover { width: 85%; max-width: 520px; aspect-ratio: 16/9; border-radius: 20px; background: white; border: 3px solid var(--gold-line); display: flex; align-items: center; justify-content: center; font-size: 5rem; margin-bottom: 10px; background-size: cover; background-position: center; }
-        .time { font-weight: 800; font-size: 2.2rem; margin: 5px 0; font-variant-numeric: tabular-nums; }
-        #prog { width: 85%; max-width: 520px; accent-color: var(--gold-line); cursor: pointer; height: 10px; margin-bottom: 15px; }
-        .play-btn { width: 90px; height: 90px; border-radius: 50%; background: var(--gold-grad); color: white; border: none; font-size: 2.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .nav-btn { background: none; border: none; color: var(--text-main); font-size: 3.5rem; cursor: pointer; }
-
+        /* CARDS & INPUTS */
         .card { background: white; padding: 12px; border-radius: 18px; border: 2px solid var(--gold-line); position: relative; }
         label { font-size: 0.7rem; font-weight: 900; color: var(--accent-gold); text-transform: uppercase; margin-bottom: 3px; display: block; }
-        
         .input-row { display: flex; align-items: center; gap: 5px; background: #f9fdff; padding: 0 10px; border-radius: 10px; margin-top: 5px; height: 42px; border: 1px solid #eef7fc; }
         input, select { border: none; background: transparent; width: 100%; outline: none; font-size: 0.85rem; font-weight: 700; color: var(--text-main); }
         
@@ -60,13 +53,18 @@
         .x-btn { color: #ff8e8e; border: none; background: none; font-weight: 900; cursor: pointer; font-size: 1.3rem; z-index: 6; }
         .ok-btn { color: var(--gold-line); border: none; background: none; font-weight: 900; cursor: pointer; font-size: 0.85rem; }
 
+        /* PLAYER ELEMENTS */
+        .cover { width: 85%; max-width: 520px; aspect-ratio: 16/9; border-radius: 20px; background: white; border: 3px solid var(--gold-line); display: flex; align-items: center; justify-content: center; font-size: 5rem; margin-bottom: 10px; background-size: cover; background-position: center; }
+        .time { font-weight: 800; font-size: 2.2rem; margin: 5px 0; font-variant-numeric: tabular-nums; }
+        #prog { width: 85%; max-width: 520px; accent-color: var(--gold-line); cursor: pointer; height: 10px; }
+        .play-btn { width: 90px; height: 90px; border-radius: 50%; background: var(--gold-grad); color: white; border: none; font-size: 2.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .nav-btn { background: none; border: none; color: var(--text-main); font-size: 3.5rem; cursor: pointer; }
+
         #lock-screen { position: absolute; inset: 0; background: rgba(255,255,255,0.98); display:none; flex-direction:column; align-items:center; justify-content:center; z-index:9999; border-radius: 20px; }
         iframe { flex: 1; border: 2px solid var(--gold-line); border-radius: 12px; margin-top: 10px; background: #fff; }
     </style>
 </head>
-<body>
-
-<button class="toggle-right" onclick="document.body.classList.toggle('dict-open')">📖</button>
+<body class="dict-open"> <button class="toggle-right" onclick="document.body.classList.toggle('dict-open')">📖</button>
 
 <div class="sidebar-left">
     <div style="text-align: center; margin-bottom: 15px;">
@@ -95,12 +93,12 @@
 </div>
 
 <div class="sidebar-right">
-    <label id="l-dict-label">DICTIONARY</label>
+    <label id="l-dict-label">ONLINE DICTIONARY</label>
     <div class="input-row">
         <input type="text" id="u-dict" value="https://dictionary.cambridge.org/" onkeypress="if(event.key==='Enter') loadDict()">
         <button class="ok-btn" onclick="loadDict()">LOAD</button>
         <button class="ok-btn" onclick="window.open(document.getElementById('u-dict').value, '_blank')">↗</button>
-        <button class="x-btn" onclick="clearF('u-dict'); document.getElementById('dict-frame').src='about:blank'">✖</button>
+        <button class="x-btn" onclick="clearF('u-dict');">✖</button>
     </div>
     <iframe id="dict-frame" src="https://dictionary.cambridge.org/"></iframe>
 </div>
@@ -146,16 +144,16 @@
         ru: { name: "Русский", lang: "ЯЗЫК", mode: "РЕЖИМ", slow: "ЗАМЕДЛЕНИЕ 0.8x", materials: "МАТЕРИАЛЫ", al: "АУДИО", il: "ФОТО", study: "Ученик", master: "Мастер", test: "Тест", select: "Выберите файл", nofile: "Файл не выбран", link: "Ссылка", dict: "Словарь", timeup: "ВРЕМЯ ВЫШЛО" },
         en: { name: "English", lang: "LANGUAGE", mode: "MODE", slow: "SLOW 0.8x", materials: "MATERIALS", al: "AUDIO", il: "IMAGE", study: "Study", master: "Master", test: "Test", select: "Choose file", nofile: "No file chosen", link: "Link", dict: "Dictionary", timeup: "TIME IS UP" },
         de: { name: "Deutsch", lang: "SPRACHE", mode: "MODUS", slow: "LANGSAM 0.8x", materials: "MATERIALIEN", al: "AUDIO", il: "BILD", study: "Lernen", master: "Master", test: "Test", select: "Datei wählen", nofile: "Keine Datei", link: "Link", dict: "Wörterbuch", timeup: "ZEIT ОБ" },
-        fr: { name: "Français", lang: "LANGUE", mode: "MODE", slow: "LENT 0.8x", materials: "MATÉRIELS", al: "AUDIO", il: "IMAGE", study: "Étude", master: "Maître", test: "Test", select: "Choisir", nofile: "Aucun fichier", link: "Lien", dict: "Dictionnaire", timeup: "TEMPS ÉCOULÉ" },
-        it: { name: "Italiano", lang: "LINGUA", mode: "MODO", slow: "LENTO 0.8x", materials: "MATERIALI", al: "AUDIO", il: "IMMAGINE", study: "Studio", master: "Master", test: "Test", select: "Scegli", nofile: "Nessun file", link: "Link", dict: "Dizionario", timeup: "TEMPO SCADUTO" },
-        es: { name: "Español", lang: "IDIOMA", mode: "MODO", slow: "LENTO 0.8x", materials: "MATERIALES", al: "AUDIO", il: "IMAGEN", study: "Estudio", master: "Maestro", test: "Prueba", select: "Elegir", nofile: "Sin archivo", link: "Enlace", dict: "Diccionario", timeup: "TIEMPO AGOTADO" },
-        pt: { name: "Português", lang: "IDIOMA", mode: "MODO", slow: "LENTO 0.8x", materials: "MATERIAIS", al: "ÁUDIO", il: "IMAGEM", study: "Estudo", master: "Mestre", test: "Teste", select: "Escolher", nofile: "Nenhum arquivo", link: "Link", dict: "Dicionário", timeup: "TEMPO ESGOTADO" },
         ja: { name: "日本語", lang: "言語", mode: "モード", slow: "スロー 0.8x", materials: "教材", al: "オーディオ", il: "画像", study: "学習", master: "マスター", test: "テスト", select: "選択", nofile: "未選択", link: "リンク", dict: "辞書", timeup: "時間切れ" },
         zh: { name: "中文", lang: "语言", mode: "模式", slow: "慢放 0.8x", materials: "材料", al: "音频", il: "图片", study: "学习", master: "大师", test: "测试", select: "选择", nofile: "未选择", link: "链接", dict: "词典", timeup: "时间到" },
-        hi: { name: "हिन्दी", lang: "भाषा", mode: "मोड", slow: "धीमी गति 0.8x", materials: "सामग्री", al: "ऑडियो", il: "छви", study: "अध्ययन", master: "मास्टर", test: "परीक्षा", select: "चुनें", nofile: "कोई फ़айл नहीं", link: "लिंक", dict: "शब्दकोش", timeup: "समय समाप्त" },
+        pt: { name: "Português", lang: "IDIOMA", mode: "MODO", slow: "LENTO 0.8x", materials: "MATERIAIS", al: "ÁUDIO", il: "IMAGEM", study: "Estudo", master: "Mestre", test: "Teste", select: "Escolher", nofile: "Nenhum arquivo", link: "Link", dict: "Dicionário", timeup: "TEMPO ESGOTADO" },
+        hi: { name: "हिन्दी", lang: "भाषा", mode: "मोड", slow: "धीमी गति 0.8x", materials: "सामग्री", al: "ऑडियो", il: "छवि", study: "अध्ययन", master: "मास्टर", test: "परीक्षा", select: "चुनें", nofile: "कोई फ़ाइल नहीं", link: "लिнк", dict: "शब्दकोश", timeup: "समय समाप्त" },
         ar: { name: "العربية", lang: "اللغة", mode: "الوضع", slow: "بطيء 0.8x", materials: "المواد", al: "صوت", il: "صورة", study: "دراسة", master: "ماستر", test: "اختبار", select: "اختر", nofile: "لا يوجد ملف", link: "رابط", dict: "قاموس", timeup: "انتهى الوقت" },
         fa: { name: "فارسی", lang: "زبان", mode: "حالت", slow: "آهسته 0.8x", materials: "مواد", al: "صوتی", il: "تصویر", study: "مطالعه", master: "استاد", test: "تست", select: "انتخاب", nofile: "فایلی نیست", link: "لینک", dict: "دیکشنری", timeup: "زمان تمام شد" },
-        da: { name: "دری", lang: "زبان", mode: "حالت", slow: "آهسته 0.8x", materials: "مواد", al: "صوتی", il: "تصویر", study: "مطالعه", master: "استاد", test: "تست", select: "انتخاب", nofile: "فایلی نیست", link: "لینک", dict: "دیکشنری", timeup: "زمان تمام شد" }
+        da: { name: "دری", lang: "زبان", mode: "حالت", slow: "آهسته 0.8x", materials: "مواد", al: "صوتی", il: "تصویر", study: "مطالعه", master: "استاد", test: "تست", select: "انتخاب", nofile: "فایلی نیست", link: "لینک", dict: "دیکشنری", timeup: "زمان تمام شد" },
+        fr: { name: "Français", lang: "LANGUE", mode: "MODE", slow: "LENT 0.8x", materials: "MATÉRIELS", al: "AUDIO", il: "IMAGE", study: "Étude", master: "Maître", test: "Test", select: "Choisir", nofile: "Aucun fichier", link: "Lien", dict: "Dictionnaire", timeup: "TEMPS ÉCOULÉ" },
+        it: { name: "Italiano", lang: "LINGUA", mode: "MODO", slow: "LENTO 0.8x", materials: "MATERIALI", al: "AUDIO", il: "IMMAGINE", study: "Studio", master: "Master", test: "Test", select: "Scegli", nofile: "Nessun file", link: "Link", dict: "Dizionario", timeup: "TEMPO SCADUTO" },
+        es: { name: "Español", lang: "IDIOMA", mode: "MODO", slow: "LENTO 0.8x", materials: "MATERIALES", al: "AUDIO", il: "IMAGEN", study: "Estudio", master: "Maestro", test: "Prueba", select: "Elegir", nofile: "Sin archivo", link: "Enlace", dict: "Diccionario", timeup: "TIEMPO AGOTADO" }
     };
 
     const sel = document.getElementById('langSelect');
@@ -178,13 +176,25 @@
         });
     }
 
-    function setAudioLink(url) { if(!url) return; audio.pause(); audio.src = url; audio.load(); audio.play().catch(()=>alert("Кликните на экран для старта")); playCount = 0; }
     function loadDict() { 
         let url = document.getElementById('u-dict').value;
         if(url && !url.startsWith('http')) url = 'https://' + url;
-        document.getElementById('dict-frame').src = url;
+        document.getElementById('dict-frame').src = url || 'about:blank';
     }
 
+    function clearF(id) {
+        const inp = document.getElementById(id);
+        if(inp) inp.value = '';
+        if(id.includes('aud')) { audio.pause(); audio.src = ''; }
+        if(id.includes('img')) setI('');
+        if(id === 'u-dict') { 
+            document.getElementById('u-dict').value = 'https://dictionary.cambridge.org/';
+            loadDict();
+        }
+        translateUI();
+    }
+
+    function setAudioLink(url) { if(!url) return; audio.pause(); audio.src = url; audio.load(); audio.play(); playCount = 0; }
     function handleFile(input) {
         if (input.files[0]) {
             const url = URL.createObjectURL(input.files[0]);
@@ -194,40 +204,20 @@
         }
     }
 
-    function clearF(id) {
-        const inp = document.getElementById(id);
-        if(inp) inp.value = '';
-        if(id.includes('aud')) { audio.pause(); audio.src = ''; }
-        if(id.includes('img')) setI('');
-        if(id === 'u-dict') document.getElementById('u-dict').value = 'https://dictionary.cambridge.org/';
-        translateUI();
-    }
-
     function initMode() {
         const m = document.getElementById('modeSelect').value;
         document.getElementById('lock-screen').style.display = 'none';
         clearInterval(testTimer);
         const isT = (m === 'test');
         document.getElementById('ff-btn').style.opacity = isT ? '0.2' : '1';
-        document.getElementById('prog').style.pointerEvents = isT ? 'none' : 'auto';
         if(isT) {
             let s = 120;
             testTimer = setInterval(() => { if(!audio.paused) s--; if(s<=0) { audio.pause(); document.getElementById('lock-screen').style.display='flex'; clearInterval(testTimer); } }, 1000);
         }
     }
 
-    function togglePlay() { 
-        if(!audio.src) return;
-        if(audio.paused) { audio.play(); } else { audio.pause(); if(document.getElementById('modeSelect').value==='study') playCount++; }
-    }
-    
-    function rewind(v) { 
-        const m = document.getElementById('modeSelect').value;
-        if(m === 'test') return;
-        if(m === 'study' && v > 0 && playCount > 2) return; 
-        audio.currentTime += v; 
-    }
-
+    function togglePlay() { if(!audio.src) return; audio.paused ? audio.play() : audio.pause(); if(document.getElementById('modeSelect').value==='study' && audio.paused) playCount++; }
+    function rewind(v) { if(document.getElementById('modeSelect').value==='test' || (v>0 && playCount>2)) return; audio.currentTime += v; }
     function manualSeek(v) { if(document.getElementById('modeSelect').value !== 'test') audio.currentTime = v; }
     function toggleSlow() { audio.playbackRate = audio.playbackRate === 1 ? 0.8 : 1; document.getElementById('slowBtn').style.background = audio.playbackRate === 0.8 ? 'var(--gold-grad)' : '#5da9e1'; }
     function setI(u) { const c = document.getElementById('cover'); c.style.backgroundImage = u ? `url(${u})` : 'none'; c.innerText = u ? '' : '♫'; }
